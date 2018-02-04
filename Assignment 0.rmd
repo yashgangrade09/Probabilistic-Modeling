@@ -1,0 +1,334 @@
+---
+title: "Assignment 0"
+author: "Yash Gangrade"
+date: "Jan 23, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Written Part
+
+# Question 1
+Let $X$ and $Y$ be continuous, real-valued random variables. Prove the following:
+
+### (a) $E[E[X \mid Y]] = E[X]$
+
+Solution: There are several ways to solve this question, one of them is defined as follows
+
+We first find $E[E[g(X) | Y]]$ i.e. a generalized expectation for a function $g$ over the random variable $X$ given $Y = y$. We are assuming that the joint pdf of X and Y is $p_{X|Y} (x|y)$, the marginal pdfs are $p_X (x)$ and $p_Y (y)$. The procedure is as follows:
+
+$$
+\begin{align*}
+  E[g(X) | Y] &= \int_{-\infty}^{\infty} g(x)\cdot p_{X|Y} (x|y) dx\\
+  E[g(X) | Y] &= \int_{-\infty}^{\infty} g(x)\cdot \frac{p_{X,Y} (x,y)}{p_Y (y)} dx
+\end{align*}
+$$
+Now, we have,
+Show in New WindowClear OutputExpand/Collapse Output
+
+The sample mean for the 10000 realizations is 0.6281583The mean calculated from the formula is  0.6266571The sample variance for the 10000 realizations is  0.1092317The variance calculated from the formula is  0.1073009It can be observed that both the mean and variance are very close to each other
+R Console
+The sample mean for the 10000 realizations is 0.6281583The mean calculated from the formula is  0.6266571The sample variance for the 10000 realizations is  0.1092317The variance calculated from the formula is  0.1073009It can be observed that both the mean and variance are very close to each other
+Show in New WindowClear OutputExpand/Collapse Output
+
+$$
+\begin{align*}
+  E[E[g(X) | Y]] &= \int_{-\infty}^{\infty} E[g(X) | Y]\cdot p_{Y} (y) dy \\
+  E[E[g(X) | Y]] &= \int_{-\infty}^{\infty}\int_{-\infty}^{\infty} g(x)\cdot \frac{p_{X,Y} (x,y)}{p_Y (y)} \cdot p_{Y} (y) dy dx \\
+  E[E[g(X) | Y]] &= \int_{-\infty}^{\infty} g(x) \left[ \int_{-\infty}^{\infty} p_{X,Y} (x,y) dy \right] dx \\
+  E[E[g(X) | Y]] &= \int_{-\infty}^{\infty} g(x) p_X (x) dx \\
+  E[E[g(X) | Y]] &= E[g(x)]
+\end{align*}
+$$
+
+This equation is very useful in probability and it can be used to solve both the parts of this question. Essentially, for this part, we will use $g(X) = X$ therefore, we have,
+$$E[E[X | Y]] = E[X]$$ Hence Proved. 
+
+
+### (b) $Var(X) = E[Var(X \mid Y)] + Var(E[X \mid Y])$
+
+Solution: We can start with RHS and expand the terms on right. We have, $var (X | Y) = E[X^2 | Y] - (E[X|Y])^2$ and $var(E[X|Y]) = E[(E[X|Y])^2] - [E[E(X|Y)]]^2$
+
+RHS: 
+$$
+\begin{align*}
+E[Var(X \mid Y)] + Var(E[X \mid Y]) &= E[E[X^2 | Y] - [E(X|Y)]^2] + E[(E[X|Y])^2] - [E[E(X|Y)]]^2 \\
+E[Var(X \mid Y)] + Var(E[X \mid Y]) &= E[E(X^2 | Y)]- E[E(X|Y)]^2] + E[E(X|Y)^2] - [E[E(X|Y)]]^2 \\
+&\text{From properties derived in Question 1, let $g(X) = X^2$, therefore we have,} \\
+E[Var(X \mid Y)] + Var(E[X \mid Y]) &= E[X^2] - [E[X]^2] \\
+E[Var(X \mid Y)] + Var(E[X \mid Y]) &= var(X)
+\end{align*}
+$$
+
+
+## Question 2
+
+### (A)
+Solution: The marginal pdf $p_X (x)$ can be found by integrating the joint pdf over all possible values of $y$. The range of $x$ and $y$ are $[0,1]$ The process is as follows:
+$$
+\begin{align*}
+  p_X (x) &= \int_{-\infty}^{\infty} p_{X,Y} (x, y) dy \\
+  p_X (x) &= \int_{0}^{1} p_{X,Y} (x, y) dy \\
+  p_X (x) &= \int_{0}^{1} (x+y) dy \\
+  p_X (x) &= \left[ xy + \frac{y^2}{2}\right]^{1}_{0} \\
+  p_X (x) &= x + \frac{1}{2} \quad \forall x \in [0,1]
+\end{align*}
+$$
+In other words, the marginal pdf of x is:
+$$
+\begin{equation*}
+p_X (x) =
+\begin{cases}
+x + \frac{1}{2} \qquad &\text{for $0 \leq x \leq 1$}\\
+0\qquad &\text{otherwise}
+\end{cases}
+\end{equation*}
+$$
+
+### (B) 
+Solution: The conditional pdf is calculated as follows:
+$$
+\begin{align*}
+  p(y | x) &= \frac{p_{X, Y} (x,y)}{p_X (x)} \\
+  p(y | x) &= \frac{x+y}{x+ \frac{1}{2}} \quad \forall y \in [0,1] \\
+  \textbf{OR} \\
+  p(y|x) &= \begin{cases}
+\frac{x+y}{x+ \frac{1}{2}} \qquad &\text{for $0 \leq y \leq 1$}\\
+0\qquad &\text{otherwise}
+\end{cases}
+\end{align*}
+$$
+
+### (C)
+Solution: The calculation of conditional expectation is shown below:
+$$
+\begin{align*}
+  E[Y | X] &= \int_{-\infty}^{\infty} y \cdot p(y|x) dy \\
+  E[Y | X] &= \int_{0}^{1} y \cdot\frac{x+y}{x+ \frac{1}{2}}  dy \\
+  E[Y | X] &= \frac{1}{x + \frac{1}{2}} \int_{0}^{1} (xy + y^2) dy \\
+  E[Y | X] &= \frac{1}{x + \frac{1}{2}} \left[ \frac{xy^2}{2} + \frac{y^3}{3}\right]^{1}_{0} \\
+  E[Y | X] &= \frac{1}{x + \frac{1}{2}} \left[ \frac{x}{2} + \frac{1}{3}\right]^{1}_{0} \\
+  E[Y | X] &= \frac{3x + 2}{6x + 3} \quad x \in [0, 1]\\
+\end{align*}
+$$
+### (D) 
+Solution: By symmetry E[X] = E[Y]. The calculation of covariance is as follows:
+$$
+\begin{align*}
+  cov (X, Y) &= E[XY] - E[X]E[Y] \\
+  cov (X, Y) &= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} xy(x+y) dx dy - 
+\left(\int_{-\infty}^{\infty} \left(x + \frac{1}{2}\right)dx \right)^2 \\
+cov (X, Y) &= \int_{0}^{1} \int_{0}^{1} xy(x+y) dx dy - 
+\left(\int_{0}^{1} x\left(x + \frac{1}{2}\right)dx \right)^2 \\
+cov (X, Y) &= \int_{0}^{1} \int_{0}^{1} (x^2y + xy^2) dx dy - \left(\int_{0}^{1} \left(x^2 + \frac{x}{2}\right)dx \right)^2 \\
+  cov (X, Y) &= \int_{0}^{1} \left[\frac{yx^3}{3} + \frac{x^2y^2}{2}\right]_{0}^{1} dy- \left(\left[\frac{x^3}{3} + \frac{x^2}{4}\right]_0^1\right)^2 \\
+  cov (X, Y) &= \int_{0}^{1} \left[\frac{y}{3} + \frac{y^2}{2}\right] dy - \frac{49}{144} \\
+  cov (X, Y) &= \left[\frac{y^2}{6} + \frac{y^3}{6}\right]_{0}^{1} - \frac{49}{144} \\
+  cov (X, Y) &= \frac{1}{3} - \frac{49}{144} \\
+  cov (X, Y) &= \frac{-1}{144}
+\end{align*}
+$$
+
+## Question 3
+
+### (a) and (b) 
+Solution: We have $X \sim Exp(\lambda)$, i.e., the exponential distribution with pdf $p(x) = \lambda \exp(-\lambda x)$ and $Y = \sqrt{X}$
+First of all, the range of valid values of $X$ and $Y$ will be greater than 0 because anything inside the square root cannot be negative thus $X>0$, and square roots always result in positive values thus $Y>0$. We will first calculate CDF of X by integrating the pdf of X. We have,
+$$
+\begin{align*}
+  F_X (x) &= \int_{0}^{x} p_X (x) dx \\
+  F_X (x) &= \int_{0}^{x} \lambda \exp(-\lambda x) dx \\
+  F_X (x) &= \frac{\lambda}{-\lambda} \left[\exp(-\lambda x)\right]_{0}^x \\
+  F_X (x) &= 1 - exp(-\lambda x) \\
+  \textbf{OR} \\
+  F_X (x) &= 
+  \begin{cases}
+  1 - exp(-\lambda x) \qquad &\text{for $0 \leq x < \infty$}\\
+  0\qquad &\text{otherwise}
+\end{cases}
+\end{align*}
+$$
+Now, we have to find the CDF and PDF of Y. The procedure is:
+$$
+\begin{align}
+  F_Y(y) &= P[Y \leq y] \\
+  F_Y(y) &= P[\sqrt{X} \leq y] \\
+  F_Y(y) &= P[X \leq y^2] \\
+  F_Y(y) &= F_X (y^2) \\
+  F_Y(y) &= 1 - exp(-\lambda y^2) \qquad \forall y \in [0, \infty)
+\end{align}
+$$
+Clearly, we have $F[0] = 0$ and $F[\infty] = 1$Now, we know that the pdf of Y is just differentiation of CDF. Thus, we have, 
+$$
+\begin{align}
+  F_Y(y) &= F_X (y^2) \\
+  f_Y (y) &= (2y)f_X (x^2) \\
+  f_Y (y) &= 2\lambda y \exp(-\lambda y^2) \qquad \forall y\in [0, \infty) \\
+\end{align}
+$$
+
+### (c) 
+Solution: We have the CDF defined as, $F_Y (y) = 1 - exp(-\lambda y^2) \qquad \forall y \in [0, \infty]$ To find the quantile, we  need to find the inverse of the CDF. Let us consider $F_Y (y)$ as t. So, we have, 
+$$
+\begin{align}
+  t &= 1 - exp(-\lambda y^2) \\
+  exp(-\lambda y^2) &= 1 - t \\
+  -\lambda y^2 &= log (1 - t) \\
+  y &= \sqrt{-\frac{1}{\lambda} log (1 - t)} \\
+  \text{In other words,} \\
+  F^{-1} (y) &= \sqrt{-\frac{1}{\lambda} log (1 - y)}
+\end{align}
+$$
+
+### (d) 
+Solution: The expectation and variance of Y are calculated as follows:
+$$
+\begin{align}
+  E[Y] &= \int_{-\infty}^{\infty} yf_Y (y) dy\\
+  E[Y] &= \int_{-\infty}^{infty} y \cdot 2\lambda y \exp(-\lambda y^2) dy\\
+  E[Y] &=  \int_{0}^{\infty} 2\lambda y^2 \exp(-\lambda y^2) dy \\
+  &\text{Let, t = y^2, the limits will remain the same} \\
+  dy &= dt / 2\sqrt{t} \\
+  E[Y] &=  \lambda \int_{0}^{\infty} \sqrt{t}\exp(-\lambda t) dt \\
+  &\text{Now, we apply by parts}\\
+  E[Y] &=  \lambda \left[\left[\frac{\sqrt{t} \exp(-\lambda t)}{-\lambda}\right]_0^{\infty} + \frac{1}{\lambda}\int_{0}^{\infty} \frac{1}{2\sqrt{t}} \exp(-\lambda t) dt\right] \\
+  &\text{Put t = y^2 back into the equation} \\
+  E[Y] &=  \lambda \left[0 + \frac{1}{\lambda}\int_{0}^{\infty} \frac{1}{2y} \exp(-\lambda y^2) 2y dy\right] \\
+  E[Y] &=  \lambda \left[\frac{1}{\lambda}\int_{0}^{\infty} \exp(-\lambda y^2) dy\right] \\
+  &\text{This is standard gaussian integral so, we have the value as:}\\
+  E[Y] &= \frac{1}{2}\sqrt{\frac{\pi}{\lambda}}
+\end{align}
+$$
+Now, we will calculate $E[X]$ as follows: 
+$$
+\begin{align*}
+  E[X] &= \int_{0}^{\infty} \lambda x \exp(-\lambda x) dx \\
+  E[X] &=  \lambda \int_{0}^{\infty}x \exp(-\lambda x) dx \\
+  E[X] &=  \lambda \left[\left[\frac{x \exp(-\lambda x)}{-\lambda}\right]_0^{\infty} + \frac{1}{\lambda} \int_{0}^{\infty} e^{-\lambda x} dx\right] \\
+   E[X] &=  \lambda \left[0 + \frac{1}{\lambda} \left[\frac{\exp(-\lambda x)}{-\lambda}\right]_0^{\infty}\right] \\
+   E[X] &= \frac{1}{\lambda}
+\end{align*}
+$$
+
+Now, we need to calculate variance as well, we have, $$var(Y) = E[Y^2] - (E[Y])^2$$ We have, $Y = \sqrt{X}$
+$$
+\begin{align*}
+  var(Y) &= E[X] - (E[Y])^2 \\
+  var(Y) &= \frac{1}{\lambda} - \left(\frac{1}{2}\sqrt{\frac{\pi}{\lambda}}\right)^2 \\
+  var(Y) &= \frac{1}{\lambda} \left(\frac{4 - \pi}{4}\right)
+\end{align*}
+$$
+
+## Question 4
+
+Solution: Given the random samples $y_1, y_2, ..., y_n$ from the above distribution, We need to find the maximum likelihood estimate from the likelihood function defined below:
+$$ L(\lambda; y_1, y_2, ...., y_n) = \prod_{i=1}^{n} f_Y (y_i) $$
+Now, we will do the log likelihood then we will differentiate it wrt $\lambda$ and set it to zero and that particular value will be the maximum likelihood estimate. 
+
+$$
+\begin{align}
+  L(\lambda) &= \prod_{i=1}^{n} f_Y (y_i) \\
+  log L(\lambda) &= \sum_{i=1}^{n} \log (2\lambda y_i \exp(-\lambda y_i^2)) \\
+  log L(\lambda) &= \sum_{i=1}^{n} (\log 2\lambda + \log y_i - \lambda y_i^2) \\
+  \frac {\partial log L(\lambda)}{\partial \lambda} &= \sum_{i=1}^{n} \left(\frac{1}{\lambda} - y_i^2\right) \\
+  \sum_{i=1}^{n} \left(\frac{1}{\lambda} - y_i^2\right) &= 0 \\
+  \frac{n}{\lambda} - \sum_{i=1}^{n} y_i^2 &= 0 \\
+  \lambda &= \frac{n}{\sum_{i=1}^{n} y_i^2}
+\end{align}
+$$
+The lamda above is the maximum likelihood estimate of the function. 
+
+## R Coding
+
+## Question 5
+
+``` {r}
+num = 100000
+lambda = 2
+
+F_inverse <- function(u, lambda){
+  f_inv = sqrt(-log(1-u)/lambda)
+  return(f_inv)
+} 
+
+calc_pdf <- function(y, lambda){
+  pdfy = 2*y*lambda*exp(-2*y^2)
+  return(pdfy)
+}
+
+u = runif(num, 0, 1)
+y = F_inverse(u, lambda)
+#Plotting Histogram
+hist(y, freq=FALSE, main = "Histogram with pdf of Y on top", ylab = "Density function/Number of occurences")
+
+#first way to calculate pdfy
+x = seq(0.00001, 10, lambda/1000)
+pdfy = calc_pdf(x, lambda)
+
+lines(x, pdfy, lwd = 2, lty = 3, col = "blue")
+
+#second way to calculate pdfy (just uncomment it and comment the above one if you want to see this)
+#pdfy = calc_pdf(y, lamda)
+#lines(x, pdfy, type = 'p', lwd = 2, lty = 3, col = "blue")
+
+legend("topright", c("Pdf", "Number of occurences/Histogram"),
+       lty = c(3, 1), lwd = 3, col = c("blue", "black"))
+
+
+#Mean and Variance by the R function in the data
+mean = mean(y)
+variance = var(y)
+
+#Mean and Variance Calculation by the derived formulas in Question 3
+mean_original <- function(lambda){
+  m = (1/lambda)*sqrt(pi/2)
+  return(m)
+}
+
+var_original <- function(lambda){
+  m = (1/lambda)*(1 - (pi/4))
+  return(m)
+}
+
+mean_formula = mean_original(2)
+variance_formula = var_original(2)
+  
+cat("The sample mean for the 10000 realizations is", mean)
+cat("The mean calculated from the formula is ", mean_formula)
+cat("The sample variance for the 10000 realizations is ", variance)
+cat("The variance calculated from the formula is ", variance_formula)
+cat("It can be observed that both the mean and variance are very close to each other")
+```
+
+
+## Question 6 - Maximum Likelihood 
+
+``` {r}
+log_lik <- function(y, lambda, n){
+  log.lik = n * log(2*lambda) + sum(log(y)) - (lambda*sum(y^2))
+  return (log.lik)  
+}
+MLE <- function(y, num_samples){
+  mle = num_samples/sum(y^2)
+  return(mle)
+}
+num_samples = 20
+l = seq(0.0001, 10, lambda/1000)
+u = runif(num_samples, 0, 1)
+y = F_inverse (u, lambda)
+
+log.lik = log_lik(y, l, num_samples)
+
+plot(l, log.lik, ylim = c(-100, 0), xlab = "Lambda", ylab = "Likelihood function", main = "Log-Likelihood function for 20 Samples", col = 'black')
+m = MLE(y, num_samples)
+abline(v = m, col='red', lwd = 3, lty = 3)
+
+legend("topright", c("Maxmium Likelihood Estimate", "Log Likelihod"),
+       lty = c(3, 1), lwd = 3, col = c("red", "black"))
+
+```
