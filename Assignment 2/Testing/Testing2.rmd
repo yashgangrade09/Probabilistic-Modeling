@@ -1,0 +1,15 @@
+---
+title: "Test2"
+author: "Yash Gangrade"
+date: "March 4, 2018"
+output: html_document
+---
+Text from the Test2 files
+
+$$x = x+2$$
+
+```{r}
+#summary(trees)
+x = 2
+print(x)
+```
