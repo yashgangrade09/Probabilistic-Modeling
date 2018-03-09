@@ -1,3 +1,4 @@
+source("BayesianNetworks-template.r");
 ####################################
 ## Simple chain example: x -> y -> z
 ####################################

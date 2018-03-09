@@ -133,14 +133,14 @@ marginalizeFactor = function(X, margVar)
     return (X);
   }
   variables = setdiff(names(X), c("probs", margVar));
-  temp_list = list();
+  templist = list();
   for(i in 1:length(variables)){
-    temp_list[[i]] = X[, temp_list[i]];
+    templist[[i]] = X[, variables[i]];
   }
-  X = aggregate(X$probs, by = temp_list, FUN = "sum");
+  X = aggregate(X$probs, by = templist, FUN = "sum");
   variables[length(variables)+1] = "probs";
   names(X) = variables;
-  return (x)
+  return (X)
 }
 
 ## Marginalize a list of variables
@@ -158,7 +158,7 @@ marginalize = function(bayesnet, margVars)
   for(i in 3:length(bayesnet)){
     temp_p = productFactor(temp_p, bayesnet[[i]]);
   }
-  bayesnet_new = marginalizeFactor(product, margVars);
+  bayesnet_new = marginalizeFactor(temp_p, margVars);
   return(bayesnet_new)
 }
 
