@@ -79,3 +79,9 @@ wsr = createCPT(list("wet", "sprinkler", "rain"),
 grassNet = list("cloudy" = c, "rain" = rc, "sprinkler" = sc, "wet" = wsr)
 
 ## Test your infer() method by replicating the computations on the website!!
+p1 = infer(grassNet, c("cloudy", "rain"), c("wet"), c("T"));
+(p1)
+p2 = infer(grassNet, c("cloudy", "sprinkler"), "wet", "T");
+(p2)
+p3 = infer(grassNet, c("cloudy", "rain", "sprinkler"), NULL, NULL)
+(p3)

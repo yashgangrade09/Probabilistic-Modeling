@@ -1005,7 +1005,7 @@ print(sprintf(&quot;The Size of the Bayesian Network is %d&quot;, l))</code></pr
 <div id="ans-1" class="section level4">
 <h4>Ans:</h4>
 <p>We will show the result for each of the health outcomes in through code. Then, after that it can be found organized properly in a table.</p>
-<p></p>
+<p><span class="math inline">\(\textbf{Code for Diabetes}\)</span></p>
 <pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
 # Bad Habits -&gt; Diabetes with Smoke and Don't exercise i.e we need to find P(diabetes | smoke = 1, exercise = 2)
 
@@ -1025,6 +1025,378 @@ diabetes_nosmoke_exercise = infer(bayesnet, setdiff(variables, c(&quot;diabetes&
 ## 2        1     2        2 0.007673509
 ## 3        1     2        3 0.839391578
 ## 4        1     2        4 0.017872557</code></pre>
+<p><span class="math inline">\(\textbf{Code for Stroke}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -&gt; Stroke with Smoke and Don't exercise i.e we need to find P(stroke | smoke = 1, exercise = 2)
+
+stroke_smoke_noexercise = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(1, 2))
+(stroke_smoke_noexercise)</code></pre>
+<pre><code>##   exercise smoke stroke      probs
+## 1        2     1      1 0.05012672
+## 2        2     1      2 0.94987328</code></pre>
+<pre class="r"><code># Good Habits -&gt; Stroke with No Smoke and Exercise i.e we need to find P(stroke | smoke = 2, exercise = 1)
+
+stroke_nosmoke_exercise = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(2, 1))
+(stroke_nosmoke_exercise)</code></pre>
+<pre><code>##   exercise smoke stroke      probs
+## 1        1     2      1 0.03680824
+## 2        1     2      2 0.96319176</code></pre>
+<p><span class="math inline">\(\textbf{Code for Heart Attack}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -&gt; Heart attack with Smoke and Don't exercise i.e we need to find P(attack | smoke = 1, exercise = 2)
+
+heartattack_smoke_noexercise = infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(1, 2))
+(heartattack_smoke_noexercise)</code></pre>
+<pre><code>##   exercise smoke attack      probs
+## 1        2     1      1 0.07241543
+## 2        2     1      2 0.92758457</code></pre>
+<pre class="r"><code># Good Habits -&gt; Heart attack with No Smoke and Exercise i.e we need to find P(attack | smoke = 2, exercise = 1)
+
+heartattack_nosmoke_exercise = infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(2, 1))
+(heartattack_nosmoke_exercise)</code></pre>
+<pre><code>##   exercise smoke attack     probs
+## 1        1     2      1 0.0510272
+## 2        1     2      2 0.9489728</code></pre>
+<p><span class="math inline">\(\textbf{Code for Angina}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -&gt; Angina with Smoke and Don't exercise i.e we need to find P(angina | smoke = 1, exercise = 2)
+
+angina_smoke_noexercise = infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(1, 2))
+(angina_smoke_noexercise)</code></pre>
+<pre><code>##   exercise smoke angina      probs
+## 1        2     1      1 0.07775608
+## 2        2     1      2 0.92224392</code></pre>
+<pre class="r"><code># Good Habits -&gt; Angina with No Smoke and Exercise i.e we need to find P(angina | smoke = 2, exercise = 1)
+
+angina_nosmoke_exercise = infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(2, 1))
+(angina_nosmoke_exercise)</code></pre>
+<pre><code>##   exercise smoke angina     probs
+## 1        1     2      1 0.0523189
+## 2        1     2      2 0.9476811</code></pre>
+</div>
+<div id="b-what-is-the-probability-of-the-outcome-if-i-have-poor-health-high-blood-pressure-high-cholesterol-and-overweight-what-if-i-have-good-health-low-blood-pressure-low-cholesterol-and-normal-weight" class="section level4">
+<h4>b) What is the probability of the outcome if I have poor health (high blood pressure, high cholesterol, and overweight)? What if I have good health (low blood pressure, low cholesterol, and normal weight)?</h4>
+</div>
+<div id="ans-2" class="section level4">
+<h4>Ans:</h4>
+<p>These health symptoms are essentially ‘bp’, ‘cholesterol’, and ‘bmi’ in the Bayesian Networks. We will show the result for each of the health outcomes in through code. Then, after that it can be found organized properly in a table.</p>
+<p><span class="math inline">\(\textbf{Code for Diabetes}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -&gt; Diabetes with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(diabetes | bp = 1, cholesterol = 1, bmi = 3)
+
+diabetes_bp_chol_over = infer(bayesnet, setdiff(variables, c(&quot;diabetes&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(1, 1, 3))
+(diabetes_bp_chol_over)</code></pre>
+<pre><code>##   bmi bp cholesterol diabetes       probs
+## 1   3  1           1        1 0.122279398
+## 2   3  1           1        2 0.006717897
+## 3   3  1           1        3 0.854002910
+## 4   3  1           1        4 0.016999795</code></pre>
+<pre class="r"><code># Good Health -&gt; Diabetes with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(diabetes | bp = 3, cholesterol = 2, bmi = 2)
+
+diabetes_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c(&quot;diabetes&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(3, 2, 2))
+(diabetes_nobp_nochol_normal)</code></pre>
+<pre><code>##   bmi bp cholesterol diabetes       probs
+## 1   2  3           2        1 0.061634465
+## 2   2  3           2        2 0.007800312
+## 3   2  3           2        3 0.919896796
+## 4   2  3           2        4 0.010668427</code></pre>
+<p><span class="math inline">\(\textbf{Code for Stroke}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -&gt; Stroke with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(stroke | bp = 1, cholesterol = 1, bmi = 3)
+
+Stroke_bp_chol_over = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(1, 1, 3))
+(Stroke_bp_chol_over)</code></pre>
+<pre><code>##   bmi bp cholesterol stroke      probs
+## 1   3  1           1      1 0.08397486
+## 2   3  1           1      2 0.91602514</code></pre>
+<pre class="r"><code># Good Health -&gt; Stroke with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(stroke | bp = 3, cholesterol = 2, bmi = 2)
+
+Stroke_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(3, 2, 2))
+(Stroke_nobp_nochol_normal)</code></pre>
+<pre><code>##   bmi bp cholesterol stroke      probs
+## 1   2  3           2      1 0.01387042
+## 2   2  3           2      2 0.98612958</code></pre>
+<p><span class="math inline">\(\textbf{Code for Heart Attack}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -&gt; Heart Attack with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(attack | bp = 1, cholesterol = 1, bmi = 3)
+
+attack_bp_chol_over = infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(1, 1, 3))
+(attack_bp_chol_over)</code></pre>
+<pre><code>##   bmi bp cholesterol attack   probs
+## 1   3  1           1      1 0.13433
+## 2   3  1           1      2 0.86567</code></pre>
+<pre class="r"><code># Good Health -&gt; Heart Attack with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(attack | bp = 3, cholesterol = 2, bmi = 2)
+
+attack_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(3, 2, 2))
+(attack_nobp_nochol_normal)</code></pre>
+<pre><code>##   bmi bp cholesterol attack      probs
+## 1   2  3           2      1 0.01588794
+## 2   2  3           2      2 0.98411206</code></pre>
+<p><span class="math inline">\(\textbf{Code for Angina}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -&gt; Angina with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(angina | bp = 1, cholesterol = 1, bmi = 3)
+
+angina_bp_chol_over = infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(1, 1, 3))
+(angina_bp_chol_over)</code></pre>
+<pre><code>##   bmi bp cholesterol angina     probs
+## 1   3  1           1      1 0.1531853
+## 2   3  1           1      2 0.8468147</code></pre>
+<pre class="r"><code># Good Health -&gt; Angina with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(angina | bp = 3, cholesterol = 2, bmi = 2)
+
+angina_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(3, 2, 2))
+(angina_nobp_nochol_normal)</code></pre>
+<pre><code>##   bmi bp cholesterol angina      probs
+## 1   2  3           2      1 0.01283874
+## 2   2  3           2      2 0.98716126</code></pre>
+</div>
+</div>
+<div id="question-3" class="section level3">
+<h3>Question 3</h3>
+<div id="evaluate-the-effect-a-persons-income-has-on-their-probability-of-having-one-of-the-four-health-outcomes-diabetes-stroke-heart-attack-angina.-for-each-of-these-four-outcomes-plot-their-probability-given-income-status-your-horizontal-axis-should-be-i-1-2-.-.-.-8-and-your-vertical-axis-should-be-py-1-income-i-where-y-is-the-outcome.-what-can-you-conclude" class="section level4">
+<h4>Evaluate the effect a person’s income has on their probability of having one of the four health outcomes (diabetes, stroke, heart attack, angina). For each of these four outcomes, plot their probability given income status (your horizontal axis should be i = 1, 2, . . . , 8, and your vertical axis should be P(y = 1 | income = i), where y is the outcome). What can you conclude?</h4>
+</div>
+<div id="ans-3" class="section level4">
+<h4>Ans:</h4>
+<p>Here, we have 4 outcomes that we need to analyze with respect to income. Also, we need to evaluate the 4 probabilties i.e. P(diabetes = 1 | income = i), P(stroke = 1 | income = i), P(heart attack = 1 | income = i), and P(angina = 1 | income = i). The procedure is done below:</p>
+<pre class="r"><code>source(&quot;Bayesnet.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+
+#create arrays with 8 elements (1 to 8 in order)
+inc = (1:8)
+diabetes_variation = (1:8)
+stroke_variation = (1:8)
+attack_variation = (1:8)
+angina_variation = (1:8)
+
+# Here in all the cases, income is the observed variable
+for(i in 1:8){
+  p1 &lt;- infer(bayesnet, setdiff(variables, c(&quot;diabetes&quot;, &quot;income&quot;)), c(&quot;income&quot;), i);
+  diabetes_variation[i] = p1$probs[1];
+  p2 &lt;- infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;income&quot;)), c(&quot;income&quot;), i);
+  stroke_variation[i] = p2$probs[1];
+  p3 &lt;- infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;income&quot;)), c(&quot;income&quot;), i);
+  attack_variation[i] = p3$probs[1];
+  p4 &lt;- infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;income&quot;)), c(&quot;income&quot;), i);
+  angina_variation[i] = p4$probs[1];
+}
+#(diabetes_variation)
+
+#Plotting on the Diagram
+plot(inc, diabetes_variation, main = &quot;Variation in probability of Health Outcomes w.r.t Income&quot;, xlab = &quot;Income&quot;, ylab= &quot;Probability Value for occurence of health problem&quot;, ylim=c(0.02,0.22),col=&quot;blue&quot;, lty = 3, lwd = 2);
+lines(inc, stroke_variation, col=&quot;green&quot;, lty = 3, lwd = 2)
+lines(inc, attack_variation, col=&quot;black&quot;, lty = 3, lwd = 2)
+lines(inc, angina_variation, col=&quot;orange&quot;, lty = 3, lwd = 2)
+legend('topright', c(&quot;Diabetes&quot;, &quot;Stroke&quot;, &quot;Attack&quot;, &quot;Angina&quot;), col = c(&quot;blue&quot;, &quot;green&quot;, &quot;black&quot;, &quot;orange&quot;), lty = 3, lwd=2)</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+</div>
+</div>
+<div id="question-4" class="section level3">
+<h3>Question 4</h3>
+<div id="notice-there-are-no-links-in-the-graph-between-the-habits-smoking-and-exercise-and-the-outcomes.-what-assumption-is-this-making-about-the-effects-of-smoking-and-exercise-on-health-problems-lets-test-the-validity-of-these-assumptions.-create-a-second-bayesian-network-as-above-but-add-edges-from-smoking-to-each-of-the-four-outcomes-and-edges-from-exercise-to-each-of-the-four-outcomes.-now-redo-the-queries-in-question-2.-what-was-the-effect-and-do-you-think-the-assumptions-of-the-first-graph-were-valid-or-not" class="section level4">
+<h4>Notice there are no links in the graph between the habits (smoking and exercise) and the outcomes. What assumption is this making about the effects of smoking and exercise on health problems? Let’s test the validity of these assumptions. Create a second Bayesian network as above, but add edges from smoking to each of the four outcomes and edges from exercise to each of the four outcomes. Now redo the queries in Question 2. What was the effect, and do you think the assumptions of the first graph were valid or not?</h4>
+</div>
+<div id="solution" class="section level4">
+<h4>Solution:</h4>
+</div>
+<div id="a-what-is-the-probability-of-the-outcome-if-i-have-bad-habits-smoke-and-dont-exercise-how-about-if-i-have-good-habits-dont-smoke-and-do-exercise-1" class="section level4">
+<h4>a) What is the probability of the outcome if I have bad habits (smoke and don’t exercise)? How about if I have good habits (don’t smoke and do exercise)?</h4>
+</div>
+<div id="ans-4" class="section level4">
+<h4>Ans:</h4>
+<p>We will show the result for each of the health outcomes in through code. Then, after that it can be found organized properly in a table.</p>
+<p><span class="math inline">\(\textbf{Code for Diabetes}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -&gt; Diabetes with Smoke and Don't exercise i.e we need to find P(diabetes | smoke = 1, exercise = 2)
+
+diabetes_smoke_noexercise = infer(bayesnet, setdiff(variables, c(&quot;diabetes&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(1, 2))
+(diabetes_smoke_noexercise)</code></pre>
+<pre><code>##   exercise smoke diabetes       probs
+## 1        2     1        1 0.226742871
+## 2        2     1        2 0.006208261
+## 3        2     1        3 0.742920993
+## 4        2     1        4 0.024127875</code></pre>
+<pre class="r"><code># Good Habits -&gt; Diabetes with No Smoke and Exercise i.e we need to find P(diabetes | smoke = 2, exercise = 1)
+
+diabetes_nosmoke_exercise = infer(bayesnet, setdiff(variables, c(&quot;diabetes&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(2, 1))
+(diabetes_nosmoke_exercise)</code></pre>
+<pre><code>##   exercise smoke diabetes       probs
+## 1        1     2        1 0.102527552
+## 2        1     2        2 0.008883719
+## 3        1     2        3 0.873671491
+## 4        1     2        4 0.014917239</code></pre>
+<p><span class="math inline">\(\textbf{Code for Stroke}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -&gt; Stroke with Smoke and Don't exercise i.e we need to find P(stroke | smoke = 1, exercise = 2)
+
+stroke_smoke_noexercise = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(1, 2))
+(stroke_smoke_noexercise)</code></pre>
+<pre><code>##   exercise smoke stroke      probs
+## 1        2     1      1 0.07902771
+## 2        2     1      2 0.92097229</code></pre>
+<pre class="r"><code># Good Habits -&gt; Stroke with No Smoke and Exercise i.e we need to find P(stroke | smoke = 2, exercise = 1)
+
+stroke_nosmoke_exercise = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(2, 1))
+(stroke_nosmoke_exercise)</code></pre>
+<pre><code>##   exercise smoke stroke      probs
+## 1        1     2      1 0.02533856
+## 2        1     2      2 0.97466144</code></pre>
+<p><span class="math inline">\(\textbf{Code for Heart Attack}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -&gt; Heart attack with Smoke and Don't exercise i.e we need to find P(attack | smoke = 1, exercise = 2)
+
+heartattack_smoke_noexercise = infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(1, 2))
+(heartattack_smoke_noexercise)</code></pre>
+<pre><code>##   exercise smoke attack     probs
+## 1        2     1      1 0.1175417
+## 2        2     1      2 0.8824583</code></pre>
+<pre class="r"><code># Good Habits -&gt; Heart attack with No Smoke and Exercise i.e we need to find P(attack | smoke = 2, exercise = 1)
+
+heartattack_nosmoke_exercise = infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(2, 1))
+(heartattack_nosmoke_exercise)</code></pre>
+<pre><code>##   exercise smoke attack      probs
+## 1        1     2      1 0.03038452
+## 2        1     2      2 0.96961548</code></pre>
+<p><span class="math inline">\(\textbf{Code for Angina}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -&gt; Angina with Smoke and Don't exercise i.e we need to find P(angina | smoke = 1, exercise = 2)
+
+angina_smoke_noexercise = infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(1, 2))
+(angina_smoke_noexercise)</code></pre>
+<pre><code>##   exercise smoke angina     probs
+## 1        2     1      1 0.1142626
+## 2        2     1      2 0.8857374</code></pre>
+<pre class="r"><code># Good Habits -&gt; Angina with No Smoke and Exercise i.e we need to find P(angina | smoke = 2, exercise = 1)
+
+angina_nosmoke_exercise = infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;smoke&quot;, &quot;exercise&quot;)), c(&quot;smoke&quot;, &quot;exercise&quot;), c(2, 1))
+(angina_nosmoke_exercise)</code></pre>
+<pre><code>##   exercise smoke angina      probs
+## 1        1     2      1 0.03596445
+## 2        1     2      2 0.96403555</code></pre>
+</div>
+<div id="b-what-is-the-probability-of-the-outcome-if-i-have-poor-health-high-blood-pressure-high-cholesterol-and-overweight-what-if-i-have-good-health-low-blood-pressure-low-cholesterol-and-normal-weight-1" class="section level4">
+<h4>b) What is the probability of the outcome if I have poor health (high blood pressure, high cholesterol, and overweight)? What if I have good health (low blood pressure, low cholesterol, and normal weight)?</h4>
+</div>
+<div id="ans-5" class="section level4">
+<h4>Ans:</h4>
+<p>These health symptoms are essentially ‘bp’, ‘cholesterol’, and ‘bmi’ in the Bayesian Networks. We will show the result for each of the health outcomes in through code. Then, after that it can be found organized properly in a table.</p>
+<p><span class="math inline">\(\textbf{Code for Diabetes}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -&gt; Diabetes with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(diabetes | bp = 1, cholesterol = 1, bmi = 3)
+
+diabetes_bp_chol_over = infer(bayesnet, setdiff(variables, c(&quot;diabetes&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(1, 1, 3))
+(diabetes_bp_chol_over)</code></pre>
+<pre><code>##   bmi bp cholesterol diabetes       probs
+## 1   3  1           1        1 0.131073667
+## 2   3  1           1        2 0.006500468
+## 3   3  1           1        3 0.844574233
+## 4   3  1           1        4 0.017851632</code></pre>
+<pre class="r"><code># Good Health -&gt; Diabetes with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(diabetes | bp = 3, cholesterol = 2, bmi = 2)
+
+diabetes_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c(&quot;diabetes&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(3, 2, 2))
+(diabetes_nobp_nochol_normal)</code></pre>
+<pre><code>##   bmi bp cholesterol diabetes      probs
+## 1   2  3           2        1 0.05765442
+## 2   2  3           2        2 0.00796897
+## 3   2  3           2        3 0.92400937
+## 4   2  3           2        4 0.01036724</code></pre>
+<p><span class="math inline">\(\textbf{Code for Stroke}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -&gt; Stroke with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(stroke | bp = 1, cholesterol = 1, bmi = 3)
+
+Stroke_bp_chol_over = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(1, 1, 3))
+(Stroke_bp_chol_over)</code></pre>
+<pre><code>##   bmi bp cholesterol stroke      probs
+## 1   3  1           1      1 0.08575396
+## 2   3  1           1      2 0.91424604</code></pre>
+<pre class="r"><code># Good Health -&gt; Stroke with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(stroke | bp = 3, cholesterol = 2, bmi = 2)
+
+Stroke_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(3, 2, 2))
+(Stroke_nobp_nochol_normal)</code></pre>
+<pre><code>##   bmi bp cholesterol stroke      probs
+## 1   2  3           2      1 0.01335442
+## 2   2  3           2      2 0.98664558</code></pre>
+<p><span class="math inline">\(\textbf{Code for Heart Attack}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -&gt; Heart Attack with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(attack | bp = 1, cholesterol = 1, bmi = 3)
+
+attack_bp_chol_over = infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(1, 1, 3))
+(attack_bp_chol_over)</code></pre>
+<pre><code>##   bmi bp cholesterol attack     probs
+## 1   3  1           1      1 0.1361617
+## 2   3  1           1      2 0.8638383</code></pre>
+<pre class="r"><code># Good Health -&gt; Heart Attack with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(attack | bp = 3, cholesterol = 2, bmi = 2)
+
+attack_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c(&quot;attack&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(3, 2, 2))
+(attack_nobp_nochol_normal)</code></pre>
+<pre><code>##   bmi bp cholesterol attack      probs
+## 1   2  3           2      1 0.01526521
+## 2   2  3           2      2 0.98473479</code></pre>
+<p><span class="math inline">\(\textbf{Code for Angina}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -&gt; Angina with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(angina | bp = 1, cholesterol = 1, bmi = 3)
+
+angina_bp_chol_over = infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(1, 1, 3))
+(angina_bp_chol_over)</code></pre>
+<pre><code>##   bmi bp cholesterol angina     probs
+## 1   3  1           1      1 0.1548693
+## 2   3  1           1      2 0.8451307</code></pre>
+<pre class="r"><code># Good Health -&gt; Angina with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(angina | bp = 3, cholesterol = 2, bmi = 2)
+
+angina_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c(&quot;angina&quot;, &quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;)), c(&quot;bp&quot;, &quot;cholesterol&quot;, &quot;bmi&quot;), c(3, 2, 2))
+(angina_nobp_nochol_normal)</code></pre>
+<pre><code>##   bmi bp cholesterol angina     probs
+## 1   2  3           2      1 0.0124368
+## 2   2  3           2      2 0.9875632</code></pre>
+</div>
+</div>
+<div id="question-5" class="section level3">
+<h3>Question 5</h3>
+<div id="also-notice-there-are-no-edges-between-the-four-outcomes.-what-assumption-is-this-making-about-the-interactions-between-health-problems-make-a-third-network-starting-from-the-network-in-question-4-but-adding-an-edge-from-diabetes-to-stroke.-for-both-networks-evaluate-the-following-probabilities" class="section level4">
+<h4>Also notice there are no edges between the four outcomes. What assumption is this making about the interactions between health problems? Make a third network, starting from the network in Question 4, but adding an edge from diabetes to stroke. For both networks, evaluate the following probabilities:</h4>
+</div>
+<div id="pstroke-1-diabetes-1-and-pstroke-1-diabetes-3" class="section level4">
+<h4>P(stroke = 1 | diabetes = 1) and P(stroke = 1 | diabetes = 3)</h4>
+</div>
+<div id="again-what-was-the-effect-and-was-the-assumption-about-the-interaction-between-diabetes-and-stroke-valid" class="section level4">
+<h4>Again, what was the effect, and was the assumption about the interaction between diabetes and stroke valid?</h4>
+</div>
+<div id="solution-1" class="section level4">
+<h4>Solution:</h4>
+<p><span class="math inline">\(\textbf{Required Inferences for Question 4 Bayesian Network}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q4.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+stroke_diabetes1 = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;diabetes&quot;)), c(&quot;diabetes&quot;), c(1))
+stroke_diabetes3 = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;diabetes&quot;)), c(&quot;diabetes&quot;), c(3))
+
+# P(stroke = 1 | diabetes = 1) 
+(stroke_diabetes1)</code></pre>
+<pre><code>##   diabetes stroke      probs
+## 1        1      1 0.04510135
+## 2        1      2 0.95489865</code></pre>
+<pre class="r"><code># P(stroke = 1 | diabetes = 3)
+(stroke_diabetes3)</code></pre>
+<pre><code>##   diabetes stroke      probs
+## 1        3      1 0.04122912
+## 2        3      2 0.95877088</code></pre>
+<p><span class="math inline">\(\textbf{Required Inferences for Question 5 updated Bayesian Network}\)</span></p>
+<pre class="r"><code>source(&quot;Bayesnet_Q5.r&quot;, echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+stroke_diabetes1 = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;diabetes&quot;)), c(&quot;diabetes&quot;), c(1))
+stroke_diabetes3 = infer(bayesnet, setdiff(variables, c(&quot;stroke&quot;, &quot;diabetes&quot;)), c(&quot;diabetes&quot;), c(3))
+
+# P(stroke = 1 | diabetes = 1) 
+(stroke_diabetes1)</code></pre>
+<pre><code>##   diabetes stroke      probs
+## 1        1      1 0.07642781
+## 2        1      2 0.92357219</code></pre>
+<pre class="r"><code># P(stroke = 1 | diabetes = 3)
+(stroke_diabetes3)</code></pre>
+<pre><code>##   diabetes stroke      probs
+## 1        3      1 0.03586261
+## 2        3      2 0.96413739</code></pre>
+</div>
+</div>
+<div id="question-6" class="section level3">
+<h3>Question 6</h3>
+<div id="finally-make-sure-that-your-code-runs-correctly-on-all-of-the-examples-in-bayesnetexamples.r.-your-code-will-be-graded-for-correctness-on-these-also." class="section level4">
+<h4>Finally, make sure that your code runs correctly on all of the examples in BayesNetExamples.r. Your code will be graded for correctness on these also.</h4>
 </div>
 </div>
 </div>

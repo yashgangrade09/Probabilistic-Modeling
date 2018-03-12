@@ -8,13 +8,12 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+<!--
 ## Coding Part 
 
 The code file with all the functions completed is as shown below. Please see the 'BayesianNetworks-template.r' file to see this code. I have completed the code completion for this function there itself. 
 
 ### BayesianNetworks-template.r
-
 ```{r}
 ## Function to create a conditional probability table
 ## Conditional probability is of the form p(x1 | x2, ..., xk)
@@ -310,7 +309,7 @@ Total number of probabilities needed to store the full joint distribution is:
 #### Ans: 
 We will show the result for each of the health outcomes in through code. Then, after that it can be found organized properly in a table. 
 
-\textbf{Code for Diabetes}
+$\textbf{Code for Diabetes}$
 ```{r}
 source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
 # Bad Habits -> Diabetes with Smoke and Don't exercise i.e we need to find P(diabetes | smoke = 1, exercise = 2)
@@ -324,3 +323,329 @@ diabetes_nosmoke_exercise = infer(bayesnet, setdiff(variables, c("diabetes", "sm
 (diabetes_nosmoke_exercise)
 
 ```
+
+$\textbf{Code for Stroke}$
+```{r}
+source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -> Stroke with Smoke and Don't exercise i.e we need to find P(stroke | smoke = 1, exercise = 2)
+
+stroke_smoke_noexercise = infer(bayesnet, setdiff(variables, c("stroke", "smoke", "exercise")), c("smoke", "exercise"), c(1, 2))
+(stroke_smoke_noexercise)
+
+# Good Habits -> Stroke with No Smoke and Exercise i.e we need to find P(stroke | smoke = 2, exercise = 1)
+
+stroke_nosmoke_exercise = infer(bayesnet, setdiff(variables, c("stroke", "smoke", "exercise")), c("smoke", "exercise"), c(2, 1))
+(stroke_nosmoke_exercise)
+
+```
+
+$\textbf{Code for Heart Attack}$
+```{r}
+source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -> Heart attack with Smoke and Don't exercise i.e we need to find P(attack | smoke = 1, exercise = 2)
+
+heartattack_smoke_noexercise = infer(bayesnet, setdiff(variables, c("attack", "smoke", "exercise")), c("smoke", "exercise"), c(1, 2))
+(heartattack_smoke_noexercise)
+
+# Good Habits -> Heart attack with No Smoke and Exercise i.e we need to find P(attack | smoke = 2, exercise = 1)
+
+heartattack_nosmoke_exercise = infer(bayesnet, setdiff(variables, c("attack", "smoke", "exercise")), c("smoke", "exercise"), c(2, 1))
+(heartattack_nosmoke_exercise)
+
+```
+
+$\textbf{Code for Angina}$
+```{r}
+source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -> Angina with Smoke and Don't exercise i.e we need to find P(angina | smoke = 1, exercise = 2)
+
+angina_smoke_noexercise = infer(bayesnet, setdiff(variables, c("angina", "smoke", "exercise")), c("smoke", "exercise"), c(1, 2))
+(angina_smoke_noexercise)
+
+# Good Habits -> Angina with No Smoke and Exercise i.e we need to find P(angina | smoke = 2, exercise = 1)
+
+angina_nosmoke_exercise = infer(bayesnet, setdiff(variables, c("angina", "smoke", "exercise")), c("smoke", "exercise"), c(2, 1))
+(angina_nosmoke_exercise)
+
+```
+
+#### b) What is the probability of the outcome if I have poor health (high blood pressure, high cholesterol, and overweight)? What if I have good health (low blood pressure, low cholesterol, and normal weight)?
+#### Ans:
+These health symptoms are essentially 'bp', 'cholesterol', and 'bmi' in the Bayesian Networks. We will show the result for each of the health outcomes in through code. Then, after that it can be found organized properly in a table. 
+
+$\textbf{Code for Diabetes}$
+```{r}
+source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -> Diabetes with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(diabetes | bp = 1, cholesterol = 1, bmi = 3)
+
+diabetes_bp_chol_over = infer(bayesnet, setdiff(variables, c("diabetes", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(1, 1, 3))
+(diabetes_bp_chol_over)
+
+# Good Health -> Diabetes with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(diabetes | bp = 3, cholesterol = 2, bmi = 2)
+
+diabetes_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c("diabetes", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(3, 2, 2))
+(diabetes_nobp_nochol_normal)
+
+```
+
+$\textbf{Code for Stroke}$
+```{r}
+source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -> Stroke with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(stroke | bp = 1, cholesterol = 1, bmi = 3)
+
+Stroke_bp_chol_over = infer(bayesnet, setdiff(variables, c("stroke", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(1, 1, 3))
+(Stroke_bp_chol_over)
+
+# Good Health -> Stroke with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(stroke | bp = 3, cholesterol = 2, bmi = 2)
+
+Stroke_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c("stroke", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(3, 2, 2))
+(Stroke_nobp_nochol_normal)
+
+```
+
+$\textbf{Code for Heart Attack}$
+```{r}
+source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -> Heart Attack with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(attack | bp = 1, cholesterol = 1, bmi = 3)
+
+attack_bp_chol_over = infer(bayesnet, setdiff(variables, c("attack", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(1, 1, 3))
+(attack_bp_chol_over)
+
+# Good Health -> Heart Attack with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(attack | bp = 3, cholesterol = 2, bmi = 2)
+
+attack_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c("attack", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(3, 2, 2))
+(attack_nobp_nochol_normal)
+
+```
+
+$\textbf{Code for Angina}$
+```{r}
+source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -> Angina with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(angina | bp = 1, cholesterol = 1, bmi = 3)
+
+angina_bp_chol_over = infer(bayesnet, setdiff(variables, c("angina", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(1, 1, 3))
+(angina_bp_chol_over)
+
+# Good Health -> Angina with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(angina | bp = 3, cholesterol = 2, bmi = 2)
+
+angina_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c("angina", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(3, 2, 2))
+(angina_nobp_nochol_normal)
+
+```
+
+### Question 3
+#### Evaluate the effect a person's income has on their probability of having one of the four health outcomes (diabetes, stroke, heart attack, angina). For each of these four outcomes, plot their probability given income status (your horizontal axis should be i = 1, 2, . . . , 8, and your vertical axis should be P(y = 1 | income = i), where y is the outcome). What can you conclude?
+
+#### Ans: 
+Here, we have 4 outcomes that we need to analyze with respect to income. Also, we need to evaluate the 4 probabilties i.e. P(diabetes = 1 | income = i), P(stroke = 1 | income = i), P(heart attack = 1 | income = i), and P(angina = 1 | income = i). The procedure is done below:
+
+```{r}
+source("Bayesnet.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+
+#create arrays with 8 elements (1 to 8 in order)
+inc = (1:8)
+diabetes_variation = (1:8)
+stroke_variation = (1:8)
+attack_variation = (1:8)
+angina_variation = (1:8)
+
+# Here in all the cases, income is the observed variable
+for(i in 1:8){
+  p1 <- infer(bayesnet, setdiff(variables, c("diabetes", "income")), c("income"), i);
+  diabetes_variation[i] = p1$probs[1];
+  p2 <- infer(bayesnet, setdiff(variables, c("stroke", "income")), c("income"), i);
+  stroke_variation[i] = p2$probs[1];
+  p3 <- infer(bayesnet, setdiff(variables, c("attack", "income")), c("income"), i);
+  attack_variation[i] = p3$probs[1];
+  p4 <- infer(bayesnet, setdiff(variables, c("angina", "income")), c("income"), i);
+  angina_variation[i] = p4$probs[1];
+}
+#(diabetes_variation)
+
+#Plotting on the Diagram
+plot(inc, diabetes_variation, main = "Variation in probability of Health Outcomes w.r.t Income", xlab = "Income", ylab= "Probability Value for occurence of health problem", ylim=c(0.02,0.22),col="blue", lty = 3, lwd = 2);
+lines(inc, stroke_variation, col="green", lty = 3, lwd = 2)
+lines(inc, attack_variation, col="black", lty = 3, lwd = 2)
+lines(inc, angina_variation, col="orange", lty = 3, lwd = 2)
+legend('topright', c("Diabetes", "Stroke", "Attack", "Angina"), col = c("blue", "green", "black", "orange"), lty = 3, lwd=2)
+```
+
+### Question 4
+#### Notice there are no links in the graph between the habits (smoking and exercise) and the outcomes. What assumption is this making about the effects of smoking and exercise on health problems? Let's test the validity of these assumptions. Create a second Bayesian network as above, but add edges from smoking to each of the four outcomes and edges from exercise to each of the four outcomes. Now redo the queries in Question 2. What was the effect, and do you think the assumptions of the first graph were valid or not?
+
+#### Solution: 
+
+#### a) What is the probability of the outcome if I have bad habits (smoke and don't exercise)? How about if I have good habits (don't smoke and do exercise)?
+#### Ans: 
+We will show the result for each of the health outcomes in through code. Then, after that it can be found organized properly in a table. 
+
+$\textbf{Code for Diabetes}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -> Diabetes with Smoke and Don't exercise i.e we need to find P(diabetes | smoke = 1, exercise = 2)
+
+diabetes_smoke_noexercise = infer(bayesnet, setdiff(variables, c("diabetes", "smoke", "exercise")), c("smoke", "exercise"), c(1, 2))
+(diabetes_smoke_noexercise)
+
+# Good Habits -> Diabetes with No Smoke and Exercise i.e we need to find P(diabetes | smoke = 2, exercise = 1)
+
+diabetes_nosmoke_exercise = infer(bayesnet, setdiff(variables, c("diabetes", "smoke", "exercise")), c("smoke", "exercise"), c(2, 1))
+(diabetes_nosmoke_exercise)
+
+```
+
+$\textbf{Code for Stroke}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -> Stroke with Smoke and Don't exercise i.e we need to find P(stroke | smoke = 1, exercise = 2)
+
+stroke_smoke_noexercise = infer(bayesnet, setdiff(variables, c("stroke", "smoke", "exercise")), c("smoke", "exercise"), c(1, 2))
+(stroke_smoke_noexercise)
+
+# Good Habits -> Stroke with No Smoke and Exercise i.e we need to find P(stroke | smoke = 2, exercise = 1)
+
+stroke_nosmoke_exercise = infer(bayesnet, setdiff(variables, c("stroke", "smoke", "exercise")), c("smoke", "exercise"), c(2, 1))
+(stroke_nosmoke_exercise)
+
+```
+
+$\textbf{Code for Heart Attack}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -> Heart attack with Smoke and Don't exercise i.e we need to find P(attack | smoke = 1, exercise = 2)
+
+heartattack_smoke_noexercise = infer(bayesnet, setdiff(variables, c("attack", "smoke", "exercise")), c("smoke", "exercise"), c(1, 2))
+(heartattack_smoke_noexercise)
+
+# Good Habits -> Heart attack with No Smoke and Exercise i.e we need to find P(attack | smoke = 2, exercise = 1)
+
+heartattack_nosmoke_exercise = infer(bayesnet, setdiff(variables, c("attack", "smoke", "exercise")), c("smoke", "exercise"), c(2, 1))
+(heartattack_nosmoke_exercise)
+
+```
+
+$\textbf{Code for Angina}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Habits -> Angina with Smoke and Don't exercise i.e we need to find P(angina | smoke = 1, exercise = 2)
+
+angina_smoke_noexercise = infer(bayesnet, setdiff(variables, c("angina", "smoke", "exercise")), c("smoke", "exercise"), c(1, 2))
+(angina_smoke_noexercise)
+
+# Good Habits -> Angina with No Smoke and Exercise i.e we need to find P(angina | smoke = 2, exercise = 1)
+
+angina_nosmoke_exercise = infer(bayesnet, setdiff(variables, c("angina", "smoke", "exercise")), c("smoke", "exercise"), c(2, 1))
+(angina_nosmoke_exercise)
+
+```
+
+#### b) What is the probability of the outcome if I have poor health (high blood pressure, high cholesterol, and overweight)? What if I have good health (low blood pressure, low cholesterol, and normal weight)?
+#### Ans:
+These health symptoms are essentially 'bp', 'cholesterol', and 'bmi' in the Bayesian Networks. We will show the result for each of the health outcomes in through code. Then, after that it can be found organized properly in a table. 
+
+$\textbf{Code for Diabetes}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -> Diabetes with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(diabetes | bp = 1, cholesterol = 1, bmi = 3)
+
+diabetes_bp_chol_over = infer(bayesnet, setdiff(variables, c("diabetes", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(1, 1, 3))
+(diabetes_bp_chol_over)
+
+# Good Health -> Diabetes with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(diabetes | bp = 3, cholesterol = 2, bmi = 2)
+
+diabetes_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c("diabetes", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(3, 2, 2))
+(diabetes_nobp_nochol_normal)
+
+```
+
+$\textbf{Code for Stroke}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -> Stroke with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(stroke | bp = 1, cholesterol = 1, bmi = 3)
+
+Stroke_bp_chol_over = infer(bayesnet, setdiff(variables, c("stroke", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(1, 1, 3))
+(Stroke_bp_chol_over)
+
+# Good Health -> Stroke with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(stroke | bp = 3, cholesterol = 2, bmi = 2)
+
+Stroke_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c("stroke", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(3, 2, 2))
+(Stroke_nobp_nochol_normal)
+
+```
+
+$\textbf{Code for Heart Attack}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -> Heart Attack with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(attack | bp = 1, cholesterol = 1, bmi = 3)
+
+attack_bp_chol_over = infer(bayesnet, setdiff(variables, c("attack", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(1, 1, 3))
+(attack_bp_chol_over)
+
+# Good Health -> Heart Attack with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(attack | bp = 3, cholesterol = 2, bmi = 2)
+
+attack_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c("attack", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(3, 2, 2))
+(attack_nobp_nochol_normal)
+
+```
+
+$\textbf{Code for Angina}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+# Bad Health -> Angina with poor health i.e. High BP, High Cholesterol, Overweight. We need to find P(angina | bp = 1, cholesterol = 1, bmi = 3)
+
+angina_bp_chol_over = infer(bayesnet, setdiff(variables, c("angina", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(1, 1, 3))
+(angina_bp_chol_over)
+
+# Good Health -> Angina with good health i.e. Low BP, Low Cholesterol, Normal Weight. We need to find P(angina | bp = 3, cholesterol = 2, bmi = 2)
+
+angina_nobp_nochol_normal = infer(bayesnet, setdiff(variables, c("angina", "bp", "cholesterol", "bmi")), c("bp", "cholesterol", "bmi"), c(3, 2, 2))
+(angina_nobp_nochol_normal)
+
+```
+
+### Question 5
+#### Also notice there are no edges between the four outcomes. What assumption is this making about the interactions between health problems? Make a third network, starting from the network in Question 4, but adding an edge from diabetes to stroke. For both networks, evaluate the following probabilities: 
+#### P(stroke = 1 | diabetes = 1) and P(stroke = 1 | diabetes = 3)
+#### Again, what was the effect, and was the assumption about the interaction between diabetes and stroke valid?
+
+#### Solution:
+
+$\textbf{Required Inferences for Question 4 Bayesian Network}$
+```{r}
+source("Bayesnet_Q4.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+stroke_diabetes1 = infer(bayesnet, setdiff(variables, c("stroke", "diabetes")), c("diabetes"), c(1))
+stroke_diabetes3 = infer(bayesnet, setdiff(variables, c("stroke", "diabetes")), c("diabetes"), c(3))
+
+# P(stroke = 1 | diabetes = 1) 
+(stroke_diabetes1)
+# P(stroke = 1 | diabetes = 3)
+(stroke_diabetes3)
+                         
+```
+
+$\textbf{Required Inferences for Question 5 updated Bayesian Network}$
+```{r}
+source("Bayesnet_Q5.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+stroke_diabetes1 = infer(bayesnet, setdiff(variables, c("stroke", "diabetes")), c("diabetes"), c(1))
+stroke_diabetes3 = infer(bayesnet, setdiff(variables, c("stroke", "diabetes")), c("diabetes"), c(3))
+
+# P(stroke = 1 | diabetes = 1) 
+(stroke_diabetes1)
+# P(stroke = 1 | diabetes = 3)
+(stroke_diabetes3)
+                         
+```
+-->
+
+### Question 6
+#### Finally, make sure that your code runs correctly on all of the examples in BayesNetExamples.r. Your code will be graded for correctness on these also.
+```{r}
+source("./BayesNetworkExamples.r", echo = TRUE, keep.source = TRUE, max.deparse.length=10000)
+```
+
+
+
+
+
+
+
