@@ -1,5 +1,5 @@
 ---
-title: "HW2"
+title: "Assignment 2"
 author: "Yash Gangrade"
 date: "March 4, 2018"
 output:
@@ -9,6 +9,8 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
 ```
 
 ## Coding Part 
