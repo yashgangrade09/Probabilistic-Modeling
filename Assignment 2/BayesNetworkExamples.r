@@ -80,8 +80,8 @@ grassNet = list("cloudy" = c, "rain" = rc, "sprinkler" = sc, "wet" = wsr)
 
 ## Test your infer() method by replicating the computations on the website!!
 p1 = infer(grassNet, c("cloudy", "rain"), c("wet"), c("T"));
-(p1$probs[1])
+(p1$probs[2])
 p2 = infer(grassNet, c("cloudy", "sprinkler"), "wet", "T");
-(p2$probs[1])
+(p2$probs[2])
 p3 = infer(grassNet, c("cloudy", "rain", "sprinkler"), NULL, NULL)
-(p3$probs[1])
+(p3$probs[2])
