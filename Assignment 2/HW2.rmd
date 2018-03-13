@@ -1,7 +1,7 @@
 ---
-title: "HW2"
+title: "Assignment 2"
 author: "Yash Gangrade"
-date: "March 4, 2018"
+date: "March 12, 2018"
 output: html_document
 ---
 
@@ -290,6 +290,7 @@ for(i in 1:10){
 #(bayesnet[[2]])
 #((nrow(bayesnet[[2]])))
 print(sprintf("The Size of the Bayesian Network is %d", l))
+
 ```
 
 ## Written Part
@@ -302,7 +303,8 @@ print(sprintf("The Size of the Bayesian Network is %d", l))
 All the calculations neeeded are performed above. Please see the last few lines of Bayesian Network generation code above. 
 
 Size of the Baysian Network i.e. total number of probabilities needed to store the full joint distribution is: 504.
-Number of Probabilities computed in order to get the bayesian network: 504 - 10 = 494 (since for each variable, you can compute one value from the rest probabilities using Total Probability Theorem.) 
+
+Total number of probabilities needed in order to get the full joint distribution = $\prod_{i=1}^{10} (\text{number of probability cases per graph node}) $ = $2^{15} = 32768$
 
 ### Question 2
 #### For each of the four health outcomes (diabetes, stroke, heart attack, angina), answer the following by querying your network (using your infer function):
