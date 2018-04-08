@@ -1,0 +1,46 @@
+---
+title: "HW4"
+author: "Yash Gangrade"
+date: "April 8, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Question 1
+
+```{r}
+source("Markov.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+
+img1 = read_image("noisy-message.png")
+img2 = read_image("noisy-yinyang.png")
+
+display_image(img1)
+display_image(img2)
+
+num_col = dim(img1)[2]
+num_row = dim(img1)[1]
+
+binary_img = matrix(0, num_row, num_col)
+binary_img = apply(binary_img, 1:2, function(x) rand_generator());
+#display_image(binary_img)
+
+## Question 1 
+cat("Trying to run for different alphas and betas")
+cat("Negative Alpha and Positive High Beta")
+binary_img = gibbs_sampling_prior(binary_img, -0.5, 1, 1.5, 20, 5);
+display_image(binary_img)
+
+cat("Negative Alpha and Low Beta")
+binary_img = gibbs_sampling_prior(binary_img, -0.5, 0.1, 1.5, 20, 5);
+display_image(binary_img)
+
+cat("Positive Alpha and Positive High Beta")
+binary_img = gibbs_sampling_prior(binary_img, 0.5, 1, 1.5, 20, 5);
+display_image(binary_img)
+
+cat("Positive Alpha and Low Beta")
+binary_img = gibbs_sampling_prior(binary_img, 0.5, 0.1, 1.5, 20, 5);
+display_image(binary_img)
+```
