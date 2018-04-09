@@ -119,7 +119,7 @@ gibbs_sampling_prior = function(img, alpha, beta, sig, iterations, burn){
       num = num + 1
       img2 = (img2 * (num - 1) + img3)/num
       #display_image(img2)
-      #image_animate(image_scale(img2, "200x200"), fps = 2, loop = 0, dispose = "previous")
+      #`image_animate(image_scale(img2, "200x200"), fps = 2, loop = 0, dispose = "previous")
     } 
   }
   return(img3)
