@@ -1,4 +1,5 @@
 require(png)
+library(magick)
 
 read_image = function(file){
   x = readPNG(file, native = FALSE)
@@ -81,10 +82,7 @@ gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
         sum = sum + img[i-1, j]
       }
       if(j != num_col){
-        sum = sum + img[i, j+1]
-      }
-      if(j != 1){
-        sum = sum + img[i, j-1]
+        sum = sum + img[i, j+1] sum = sum + img[i, j-1]
       }
       t1 = 1/(2*sig^2)
       num_positive = alpha + beta*sum - (t1*((1 - img[i,j])^2))
@@ -101,6 +99,9 @@ gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
         img2[i,j] = 1
       }
     }
+      }
+      if(j != 1){
+       
   }
   return(img2);
 }
@@ -118,6 +119,7 @@ gibbs_sampling_prior = function(img, alpha, beta, sig, iterations, burn){
       num = num + 1
       img2 = (img2 * (num - 1) + img3)/num
       #display_image(img2)
+      #image_animate(image_scale(img2, "200x200"), fps = 2, loop = 0, dispose = "previous")
     } 
   }
   return(img3)
@@ -135,8 +137,8 @@ gibbs_sampling_prior_posterior = function(img, alpha, beta, sig, iterations, bur
     img3 = gen_ising_prior_posterior_term(img, alpha, beta, sig)
     if(i > burn){
       num = num + 1
-      img2 = (img2 * (num - 1) + img3)/n
-      display_image(img2)
+      img2 = (img2 * (num - 1) + img3)/num
+      #display_image(img2)
     } 
   }
   return(img2)
@@ -155,8 +157,8 @@ get_estimated_variance_prior = function(img, alpha, beta, sig, iterations, burn)
     img3 = gen_ising_prior_term(img, alpha, beta)
     if(i > burn){
       num = num + 1
-      img2 = (img2 * (num - 1) + img3)/n
-      display_image(img2)
+      img2 = (img2 * (num - 1) + img3)/num
+      #display_image(img2)
       new_var = 0
       for(j in 1:num_row){
         for(k in 1:num_col){
@@ -184,8 +186,8 @@ get_estimated_variance_prior_posterior = function(img, alpha, beta, sig, iterati
     img3 = gen_ising_prior_posterior_term(img, alpha, beta, sig)
     if(i > burn){
       num = num + 1
-      img2 = (img2 * (num - 1) + img3)/n
-      display_image(img2)
+      img2 = (img2 * (num - 1) + img3)/num
+      #display_image(img2)
       new_var = 0
       for(j in 1:num_row){
         for(k in 1:num_col){
