@@ -26,7 +26,7 @@ binary_img = matrix(0, num_row, num_col)
 binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 #display_image(binary_img)
 
-# ## Question 1
+## Question 1.1
 # cat("Trying to run for different alphas and betas")
 # cat("Negative Alpha and Positive High Beta")
 # binary_img = gibbs_sampling_prior(binary_img, -0.5, 1, 1.5, 20, 5);
@@ -43,14 +43,37 @@ binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 # cat("Positive Alpha and Low Beta")
 # binary_img = gibbs_sampling_prior(binary_img, 0.5, 0.1, 1.5, 20, 5);
 # display_image(binary_img)
+# 
+# ## Question 1.2
+# cat("Trying to run for different alphas and betas")
+# cat("Negative Alpha and Positive High Beta")
+# #binary_img = gibbs_sampling_prior(img1, -0.5, 1, 1.5, 20, 5);
+# #display_image(binary_img)
 
-## Question 2
-cat("Trying to run for different alphas and betas")
-cat("Negative Alpha and Positive High Beta")
-binary_img = gibbs_sampling_prior(img1, -0.5, 1, 1.5, 20, 5);
-display_image(binary_img)
+```
+
+## Question 2 
+
+```{r}
+#source("HamiltonianMonteCarlo.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+
+## Load and Store the data so as to use for the given question
+dataset = iris
+dataset = subset(dataset, Species != "setosa")
+
+# if(dataset$Species == "versicolor"){
+#   dataset$Species = 1
+# } else{
+#   dataset$Species = 0
+# }
+
+dataset$Species = ifelse(dataset$Species == "versicolor", 1, 0)
+
+dataset = as.matrix(dataset)
+print(dataset)
 
 
 ```
+
 
 

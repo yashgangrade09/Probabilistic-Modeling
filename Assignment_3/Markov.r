@@ -82,7 +82,10 @@ gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
         sum = sum + img[i-1, j]
       }
       if(j != num_col){
-        sum = sum + img[i, j+1] sum = sum + img[i, j-1]
+        sum = sum + img[i, j+1] 
+      }
+      if(j != 1){
+        sum = sum + img[i, j-1] 
       }
       t1 = 1/(2*sig^2)
       num_positive = alpha + beta*sum - (t1*((1 - img[i,j])^2))
