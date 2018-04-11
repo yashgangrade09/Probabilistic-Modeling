@@ -56,7 +56,7 @@ cat("Negative Alpha and Positive High Beta")
 
 ```{r}
 #source("HamiltonianMonteCarlo.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
-
+require(animation)
 ## Load and Store the data so as to use for the given question
 dataset = iris
 dataset = subset(dataset, Species != "setosa")
@@ -133,7 +133,66 @@ grad_U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Tra
   return(temp_gradient)
 }
 
-
+## Code from Radford Neal's paper (slightly modified, adds animation)
+HMC = function (U, grad_U, epsilon, L, current_q, anim = FALSE)
+{
+  q = current_q
+  p = rnorm(length(q),0,1) # independent standard normal variates
+  current_p = p
+  
+  qList = q
+  pList = p
+  
+  ## Make a half step for momentum at the beginning
+  p = p - epsilon * grad_U(q) / 2
+  
+  ## Alternate full steps for position and momentum
+  for(i in 1:(L-1))
+  {
+    ## Make a full step for the position
+    q = q + epsilon * p
+    
+    ## Make a full step for the momentum, except at end of trajectory
+    p = p - epsilon * grad_U(q)
+    
+    if(anim)
+    {
+      H = function(x, y) { U(x) + 0.5 * y^2 }
+      
+      t = seq(-2, 2, 0.01)
+      Hvals = outer(t, t, H)
+      contour(t, t, Hvals, levels=seq(0, 3, 0.1), asp=1,
+              drawlabel=FALSE, xlab="q", ylab="p")
+      lines(qList, pList, lwd=2, col='red')
+      ani.record()
+      pList = c(pList, p)
+      qList = c(qList, q)
+    }
+  }
+  
+  q = q + epsilon * p
+  
+  ## Make a half step for momentum at the end.
+  p = p - epsilon * grad_U(q) / 2
+  
+  ## Negate momentum at end of trajectory to make the proposal symmetric
+  p = -p
+  
+  ## Evaluate potential and kinetic energies at start and end of trajectory
+  current_U = U(current_q)
+  current_K = sum(current_p^2) / 2
+  proposed_U = U(q)
+  proposed_K = sum(p^2) / 2
+  
+  ## Accept or reject the state at end of trajectory, returning either
+  ## the position at the end of the trajectory or the initial position
+  if(current_U + current_K > proposed_U + proposed_K)
+    return(q) # reject
+  else if (runif(1) < exp(current_U-proposed_U+current_K-proposed_K))
+    return (q) # accept
+  else
+    return (current_q) # reject
+}
 
 #driver function to run Hamiltonian Monte Carlo
 HMC_util = function(epsilon, L, samples, burn){
