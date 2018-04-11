@@ -69,5 +69,7 @@ f = function(x)
   exp(-x^8 + 4 * x^4 - 3 * x^2)
 }
 
+clamp = function(x, a, b) { (x<a)*a + (x>b)*b + (x>=a)*(x<=b)*x }
+
 
 

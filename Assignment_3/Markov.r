@@ -47,10 +47,10 @@ gen_ising_prior_term = function(img, alpha, beta){
       if(j != 1){
         sum = sum + img[i, j-1]
       }
-      num_positive = alpha + beta*sum
-      num_negative = -alpha - beta*sum
-      probability_negative = exp(num_negative)
-      probability_positive = exp(num_positive)
+      u_positive = alpha + beta*sum
+      u_negative = -alpha - beta*sum
+      probability_negative = exp(u_negative)
+      probability_positive = exp(u_positive)
       
       final_probability = probability_positive / (probability_negative + probability_positive)
       rand = runif(1)

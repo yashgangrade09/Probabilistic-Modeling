@@ -29,9 +29,9 @@ binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 ## Question 1.1
 # cat("Trying to run for different alphas and betas")
 # cat("Negative Alpha and Positive High Beta")
-# binary_img = gibbs_sampling_prior(binary_img, -0.5, 1, 1.5, 20, 5);
+# binary_img = gibbs_sampling_prior(binary_img, -0.5, 1, 1.5, 500, 5);
 # display_image(binary_img)
-# 
+
 # cat("Negative Alpha and Low Beta")
 # binary_img = gibbs_sampling_prior(binary_img, -0.5, 0.1, 1.5, 20, 5);
 # display_image(binary_img)
@@ -43,12 +43,12 @@ binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 # cat("Positive Alpha and Low Beta")
 # binary_img = gibbs_sampling_prior(binary_img, 0.5, 0.1, 1.5, 20, 5);
 # display_image(binary_img)
-# 
-# ## Question 1.2
-# cat("Trying to run for different alphas and betas")
-# cat("Negative Alpha and Positive High Beta")
-# #binary_img = gibbs_sampling_prior(img1, -0.5, 1, 1.5, 20, 5);
-# #display_image(binary_img)
+
+## Question 1.2
+cat("Trying to run for different alphas and betas")
+cat("Negative Alpha and Positive High Beta")
+#binary_img = gibbs_sampling_prior(img1, -0.5, 1, 1.5, 20, 5);
+#display_image(binary_img)
 
 ```
 
@@ -130,6 +130,48 @@ grad_U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Tra
   temp_mat = 1 - (exp(-temp_mul)/(1 + exp(-temp_mul))) - label
   temp_gradient = data %*% temp_mat + ((1/sigma^2)*beta)
   return(temp_gradient)
+}
+
+#driver function to run Hamiltonian Monte Carlo
+HMC_util = function(epsilon, L, samples, burn){
+  reject = 0
+  beta = beta_i
+  
+  # starting with the burn-in samples
+  for(i in 1:burn){
+    beta = HMC(U(beta), grad_U(beta), epsilon, L, beta)
+  }
+  
+  beta_l = matrix(0.0, samples, 5)
+  beta_l[1,] = beta
+  
+  # Start with the samples/iterations
+  it = samples - 1
+  for(i in 1:it){
+    beta_updated = HMC(U(beta), grad_U(beta), epsilon, L, beta)
+    temp = beta - beta_updated
+    if(beta_norm(temp) < 0.0001){
+      reject = reject + 1
+    }
+    beta = beta_updated
+    beta_l[i,] = beta_updated
+  }
+  accept_percent = (1 - (reject/samples))*100
+  cat("Acceptance Rate is ", accept_percent, "\n")
+  return(beta_l)
+}
+
+## Generating Plots
+
+trace_beta = function(beta, ftr_num, feature){
+  row = dim(beta)[1]
+  plot(1:row, beta[,ftr_num], lwd = 2, col = 'blue', main="Trace Plot", xlab = "Samples", ylab = paste("Beta for ", feature, sep = ""))
+}
+
+## Code for classification
+classifier = function(sample_beta, testing = X_Test){
+  sample_count = dim(sample_beta)[1]
+  data_points = dim(testing)[2]
 }
 
 ```
