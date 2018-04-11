@@ -16,8 +16,8 @@ source("Markov.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
 img1 = read_image("noisy-message.png")
 img2 = read_image("noisy-yinyang.png")
 
-display_image(img1)
-display_image(img2)
+#display_image(img1)
+#display_image(img2)
 
 num_col = dim(img1)[2]
 num_row = dim(img1)[1]
@@ -69,9 +69,68 @@ dataset = subset(dataset, Species != "setosa")
 
 dataset$Species = ifelse(dataset$Species == "versicolor", 1, 0)
 
-dataset = as.matrix(dataset)
 print(dataset)
+#dataset = as.matrix(dataset)
+#print(dataset[,1])
+# Seperate the dataset into features and labels
 
+X = t(as.matrix(cbind(dataset[1:4], 1)))
+Y = as.matrix(dataset[5])
+
+print(X[,1:30])
+
+#print(t(rowMeans(X)))
+#print(Y)
+
+beta_i = matrix(0.0,5,1)
+sigma_i = 1
+
+# Seperate the training and training datasets 
+X_Train = matrix(0.0, 5, 60)
+X_Test = matrix(0.0, 5, 40)
+#print(dim(X_Train))
+
+Y_Train = matrix(0.0, 60, 1)
+Y_Test = matrix(0.0, 40, 1)
+
+# For each species, first 30 rows will be training data and the rest 20 will be testing data
+X_Train[,1:30] = X[,1:30]
+X_Test[,1:20] = X[,31:50]
+X_Train[,31:60] = X[,51:80]
+X_Test[,21:40] = X[,81:100]
+
+Y_Train[1:30,] = Y[1:30,]
+Y_Test[1:20,] = Y[31:50,]
+Y_Train[31:60,] = Y[51:80,]
+Y_Test[21:40,] = Y[81:100,]
+
+X_Train = X_Train - rowMeans(X_Train)
+X_Test = X_Test - rowMeans(X_Test)
+# 
+# print(X_Train)
+# print(X_Test)
+
+#### Main methods start from here ####
+
+beta_norm = function(beta){
+  temp = as.vector(beta)
+  temp = sqrt(sum(temp * temp))
+  return(temp)
+}
+
+U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Train){
+  temp_beta = beta_norm(beta)
+  temp_mul = t(data) %*% beta
+  temp_U = t(1 -label) %*% temp_mul + sum(log(1+exp(-temp_mul)))  + (1 / 2 * sigma^2) * temp_beta^2
+  return (temp_U)
+}
+
+grad_U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Train){
+  temp_mul = t(data) %*% beta
+  temp_mat = 1 - (exp(-temp_mul)/(1 + exp(-temp_mul))) - label
+  temp_gradient = data %*% temp_mat + ((1/sigma^2)*beta)
+  return(temp_gradient)
+}
 
 ```
 
