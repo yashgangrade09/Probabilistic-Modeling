@@ -27,28 +27,31 @@ binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 #display_image(binary_img)
 
 ## Question 1.1
-# cat("Trying to run for different alphas and betas")
-# cat("Negative Alpha and Positive High Beta")
-# binary_img = gibbs_sampling_prior(binary_img, -0.5, 1, 1.5, 500, 5);
-# display_image(binary_img)
+cat("Trying to run for different alphas and betas")
+cat("Negative Alpha and Positive High Beta")
+resultant_img = gibbs_sampling_prior(binary_img, -0.5, 1, 1.5, 500, 5);
+display_image(resultant_img)
 
-# cat("Negative Alpha and Low Beta")
-# binary_img = gibbs_sampling_prior(binary_img, -0.5, 0.1, 1.5, 20, 5);
-# display_image(binary_img)
-# 
-# cat("Positive Alpha and Positive High Beta")
-# binary_img = gibbs_sampling_prior(binary_img, 0.5, 1, 1.5, 20, 5);
-# display_image(binary_img)
-# 
-# cat("Positive Alpha and Low Beta")
-# binary_img = gibbs_sampling_prior(binary_img, 0.5, 0.1, 1.5, 20, 5);
-# display_image(binary_img)
+cat("Negative Alpha and Low Beta")
+resultant_img = gibbs_sampling_prior(binary_img, -0.5, 0.1, 1.5, 20, 5);
+display_image(resultant_img)
+
+cat("Positive Alpha and Positive High Beta")
+resultant_img = gibbs_sampling_prior(binary_img, 0.5, 1, 1.5, 20, 5);
+display_image(resultant_img)
+
+cat("Positive Alpha and Low Beta")
+resultant_img = gibbs_sampling_prior(binary_img, 0.5, 0.1, 1.5, 20, 5);
+display_image(resultant_img)
 
 ## Question 1.2
 cat("Trying to run for different alphas and betas")
 cat("Negative Alpha and Positive High Beta")
-#binary_img = gibbs_sampling_prior(img1, -0.5, 1, 1.5, 20, 5);
-#display_image(binary_img)
+#resultant_img = gibbs_sampling_prior(img1, -0.5, 1, 1.5, 20, 5);
+#display_image(resultant_img)
+
+## Question 1.3
+#resultant_img = get_estimated_variance_prior_posterior(img1, 0.5, 1.5, 1.5, 20, 5) 
 
 ```
 

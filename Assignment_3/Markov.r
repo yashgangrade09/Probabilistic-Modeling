@@ -197,11 +197,12 @@ get_estimated_variance_prior_posterior = function(img, alpha, beta, sig, iterati
           new_var = new_var + (img2[j,k] - img_orig[j,k])^2
         }
       }
-      sample_sig[n,] = sig
+      sample_sig[num,] = sig
       sig = new_var/(num_row * num_col)
     }
     img = img2
   }
+  cat("The sigma is ", sig)
   return(img2)
 }
 
