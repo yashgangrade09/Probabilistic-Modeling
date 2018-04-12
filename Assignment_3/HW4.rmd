@@ -122,13 +122,13 @@ beta_norm = function(beta){
 U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Train){
   temp_beta = beta_norm(beta)
   temp_mul = t(data) %*% beta
-  temp_U = t(1 -label) %*% temp_mul + sum(log(1+exp(-temp_mul)))  + (1 / 2 * sigma^2) * temp_beta^2
+  temp_U = t(1 -labels) %*% temp_mul + sum(log(1+exp(-temp_mul)))  + (1 / 2 * sigma^2) * temp_beta^2
   return (temp_U)
 }
 
 grad_U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Train){
   temp_mul = t(data) %*% beta
-  temp_mat = 1 - (exp(-temp_mul)/(1 + exp(-temp_mul))) - label
+  temp_mat = 1 - (exp(-temp_mul)/(1 + exp(-temp_mul))) - labels
   temp_gradient = data %*% temp_mat + ((1/sigma^2)*beta)
   return(temp_gradient)
 }
@@ -227,7 +227,7 @@ HMC_util = function(epsilon, L, samples, burn){
 
 trace_beta = function(beta, ftr_num, feature){
   row = dim(beta)[1]
-  plot(1:row, beta[,ftr_num], lwd = 2, col = 'blue', main="Trace Plot", xlab = "Samples", ylab = paste("Beta for ", feature, sep = ""))
+  plot(1:row, beta[,ftr_num], lwd = 1, type = 'l', col = 'blue', main="Trace Plot", xlab = "Samples", ylab = paste("Beta for ", feature, sep = ""))
 }
 
 ## Code for classification
@@ -256,7 +256,7 @@ average_classifier = function(sample_beta, testing = X_Test){
   data_points = dim(testing)[2]
   updated_labels = matrix(0, data_points, 1)
   probability_matrix = matrix(0, data_points, 1)
-  temp_mat = t(testing) %*% beta
+  temp_mat = t(testing) %*% average_beta
   temp_prob = 1 + exp(-temp_mat)
   probability_matrix = probability_matrix + (1/temp_prob)
   updated_labels[probability_matrix > 0.5] = 1
@@ -278,12 +278,37 @@ posterior_probability = function(sample_beta, testing = X_Test){
   
   for(i in 1:sample_count){
     beta = sample_beta[1,]
-    temp_mat = testing %*% beta
-    probability_matrix = probability_matrix + (1/temp_prob)
+    temp_mat = t(testing) %*% beta
+    probability_matrix = probability_matrix + (1/(1 + exp(-temp_mat)))
   }
   probability_matrix = probability_matrix/sample_count
   return(probability_matrix)
 }
+
+## Calling for Question 2
+# sample_beta = HMC_util(0.1, 20, 1000, 500)
+# print(sample_beta)
+# 
+# ## Draw Trace Plots
+# trace_beta(sample_beta, 1, "Sepal Length")
+# trace_beta(sample_beta, 2, "Sepal Width")
+# trace_beta(sample_beta, 3, "Petal Length")
+# trace_beta(sample_beta, 4, "Petal Width")
+# 
+# ## Get the prediction for y of the class labels for the testing data
+# prediction = classifier(sample_beta)
+# #print(prediction)
+# prediction = round(prediction)
+# #print(Y_Test)
+# testing_classification_accuracy(prediction)
+# posterior = posterior_probability(sample_beta)
+# print(posterior)
+# 
+# ## Do for the average classification
+# prediction_avg = average_classifier(sample_beta)
+# prediction_avg = round(prediction_avg)
+# testing_classification_accuracy(prediction_avg)
+
 ```
 
 
