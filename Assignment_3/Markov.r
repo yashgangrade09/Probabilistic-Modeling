@@ -82,17 +82,20 @@ gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
         sum = sum + img[i-1, j]
       }
       if(j != num_col){
-        sum = sum + img[i, j+1] 
+        sum = sum + img[i, j+1]
       }
       if(j != 1){
-        sum = sum + img[i, j-1] 
+        sum = sum + img[i, j-1]
       }
       t1 = 1/(2*sig^2)
-      num_positive = alpha + beta*sum - (t1*((1 - img[i,j])^2))
-      num_negative = -alpha - beta*sum - (t1*((-1 - img[i,j])^2))
+       num_positive = alpha + beta*sum - (t1*((1 - (1 - img[i,j])^2)))
+       num_negative = -alpha - beta*sum - (t1*((-1 - (1 - img[i,j])^2)))
+      #num_positive = alpha*img2[i,j] + beta*sum*img2[i,j] - (t1*((img2[i,j] - img[i,j])^2))
+      #num_negative = -alpha*img2[i,j] - beta*sum*img2[i,j] - (t1*((img2[i,j] - img[i,j])^2))
+  
       probability_negative = exp(num_negative)
       probability_positive = exp(num_positive)
-      
+
       final_probability = probability_positive / (probability_negative + probability_positive)
       rand = runif(1)
       if(final_probability < rand){
@@ -102,10 +105,40 @@ gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
         img2[i,j] = 1
       }
     }
-      }
-      if(j != 1){
-       
   }
+  
+  # for(iter in 1:(num_row*num_col)){
+  #     i = sample.int(num_row, 1)
+  #     j = sample.int(num_col, 1)
+  #     
+  #     sum = 0
+  #     if(i != num_row){
+  #       sum = sum + img[i+1, j]
+  #     }
+  #     if(i != 1){
+  #       sum = sum + img[i-1, j]
+  #     }
+  #     if(j != num_col){
+  #       sum = sum + img[i, j+1] 
+  #     }
+  #     if(j != 1){
+  #       sum = sum + img[i, j-1] 
+  #     }
+  #     t1 = 1/(2*sig^2)
+  #     num_positive = alpha + beta*sum - (t1*((1 - (1 - img[i,j])^2)))
+  #     num_negative = -alpha - beta*sum - (t1*((-1 - (1 - img[i,j])^2)))
+  #     probability_negative = exp(-num_negative)
+  #     probability_positive = exp(num_positive)
+  #     
+  #     final_probability = probability_positive / (probability_negative + probability_positive)
+  #     rand = runif(1)
+  #     if(final_probability < rand){
+  #       img2[i,j] = -1
+  #     }
+  #     else{
+  #       img2[i,j] = 1
+  #     }
+  # }
   return(img2);
 }
 
@@ -121,8 +154,6 @@ gibbs_sampling_prior = function(img, alpha, beta, sig, iterations, burn){
     if(i > burn){
       num = num + 1
       img2 = (img2 * (num - 1) + img3)/num
-      #display_image(img2)
-      #`image_animate(image_scale(img2, "200x200"), fps = 2, loop = 0, dispose = "previous")
     } 
   }
   return(img3)
@@ -133,11 +164,11 @@ gibbs_sampling_prior_posterior = function(img, alpha, beta, sig, iterations, bur
   num_row = dim(img)[1]
   num = 0
   #generating the new image, initializing it to 0 for all the values
-  img2 = matrix(0, num_row, num_col)  
+  #img2 = matrix(0, num_row, num_col)  
   it = iterations + burn
-  
+  img2 = img
   for(i in 1:it){
-    img3 = gen_ising_prior_posterior_term(img, alpha, beta, sig)
+    img3 = gen_ising_prior_posterior_term(img2, alpha, beta, sig)
     if(i > burn){
       num = num + 1
       img2 = (img2 * (num - 1) + img3)/num
