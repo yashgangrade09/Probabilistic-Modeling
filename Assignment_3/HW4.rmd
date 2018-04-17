@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Question 1
 
 ```{r}
-source("Markov.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
+source("Markov.r", echo = TRUE, keep.source = TRUE, max.deparse.length=10000)
 
 img1 = read_image("noisy-message.png")
 img2 = read_image("noisy-yinyang.png")
@@ -27,33 +27,35 @@ binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 #display_image(binary_img)
 
 ## Question 1.1
-# cat("Trying to run for different alphas and betas")
-# cat("Negative Alpha and Positive High Beta")
-# resultant_img = gibbs_sampling_prior(binary_img, -0.5, 1, 1.5, 500, 5);
-# display_image(resultant_img)
-# 
-# cat("Negative Alpha and Low Beta")
-# resultant_img = gibbs_sampling_prior(binary_img, -0.5, 0.1, 1.5, 500, 5);
-# display_image(resultant_img)
-# 
-# cat("Positive Alpha and Positive High Beta")
-# resultant_img = gibbs_sampling_prior(binary_img, 0.5, 1, 1.5, 500, 5);
-# display_image(resultant_img)
-# 
-# cat("Positive Alpha and Low Beta")
-# resultant_img = gibbs_sampling_prior(binary_img, 0.5, 0.1, 1.5, 500, 5);
-# display_image(resultant_img)
+cat("Trying to run for different alphas and betas \n")
+cat("Negative Alpha and Positive High Beta \n")
+resultant_img = gibbs_sampling_prior(binary_img, -0.3, 0.8, 1.5, 100, 5);
+display_image(resultant_img)
+#
+cat("Negative Alpha and Low Beta \n")
+resultant_img = gibbs_sampling_prior(binary_img, -0.3, 0.1, 1.5, 100, 5);
+display_image(resultant_img)
+#
+cat("Positive Alpha and Positive High Beta \n")
+resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.8, 1.5, 100, 5);
+display_image(resultant_img)
+#
+cat("Positive Alpha and Low Beta \n")
+resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.1, 1.5, 100, 5);
+display_image(resultant_img)
 
 ## Question 1.2
 cat("Running for the Markov Noisy Image \n")
-
+#
 cat("Here's the noisy image i.e. noisy-message.png \n")
-display_image()
+display_image(img1)
+#
+cat("We used alpha = 0, beta = 2.2, sigma = 1.4 with 100 iterations and 20 burn-in samples. The clean image is shown below \n")
 resultant_img = gibbs_sampling_prior_posterior(img1, 0, 2.2, 1.4, 100, 20);
 display_image(resultant_img)
 
 ## Question 1.3
-#resultant_img = get_estimated_variance_prior_posterior(img1, 0.5, 1.5, 1.5, 20, 5) 
+resultant_img = get_estimated_variance_prior_posterior(img1, 0.5, 1.5, 2.5, 100, 25) 
 
 ```
 
@@ -88,9 +90,6 @@ Y = as.matrix(dataset[5])
 #print(t(rowMeans(X)))
 #print(Y)
 
-beta_i = matrix(0.0,5,1)
-sigma_i = 1
-
 # Seperate the training and training datasets 
 X_Train = matrix(0.0, 5, 60)
 X_Test = matrix(0.0, 5, 40)
@@ -116,6 +115,9 @@ X_Test = X_Test - rowMeans(X_Test)
 # print(X_Train)
 # print(X_Test)
 
+beta_i = matrix(0.0,5,1)
+sigma_i = 1
+
 #### Main methods start from here ####
 
 beta_norm = function(beta){
@@ -137,7 +139,7 @@ grad_U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Tra
   temp_gradient = data %*% temp_mat + ((1/sigma^2)*beta)
   return(temp_gradient)
 }
-
+reject_counter = 0
 ## Code from Radford Neal's paper (slightly modified, adds animation)
 HMC = function (U, grad_U, epsilon, L, current_q, anim = FALSE)
 {
@@ -195,8 +197,10 @@ HMC = function (U, grad_U, epsilon, L, current_q, anim = FALSE)
     return(q) # reject
   else if (runif(1) < exp(current_U-proposed_U+current_K-proposed_K))
     return (q) # accept
-  else
+  else{
+    reject_counter <<- reject_counter + 1
     return (current_q) # reject
+  }
 }
 
 #driver function to run Hamiltonian Monte Carlo
@@ -206,7 +210,7 @@ HMC_util = function(epsilon, L, samples, burn){
   
   # starting with the burn-in samples
   for(i in 1:burn){
-    beta = HMC(U(beta), grad_U(beta), epsilon, L, beta)
+    beta = HMC(U, grad_U, epsilon, L, beta)
   }
   
   beta_l = matrix(0.0, samples, 5)
@@ -214,16 +218,19 @@ HMC_util = function(epsilon, L, samples, burn){
   
   # Start with the samples/iterations
   it = samples - 1
+  beta_updated = beta
+  
   for(i in 1:it){
-    beta_updated = HMC(U(beta), grad_U(beta), epsilon, L, beta)
+    beta_updated = HMC(U, grad_U, epsilon, L, beta_updated)
     temp = beta - beta_updated
-    if(beta_norm(temp) < 0.0001){
-      reject = reject + 1
-    }
-    beta = beta_updated
+    
+    # if(beta_norm(temp) < 0.0001){
+    #   reject = reject + 1
+    # }
     beta_l[i,] = beta_updated
   }
-  accept_percent = (1 - (reject/samples))*100
+  accept_percent = (1 - (reject_counter/samples))*100
+  
   cat("Acceptance Rate is ", accept_percent, "\n")
   return(beta_l)
 }
@@ -237,12 +244,13 @@ trace_beta = function(beta, ftr_num, feature){
 
 ## Code for classification
 classifier = function(sample_beta, testing = X_Test){
-  sample_count = dim(sample_beta)[1]
+  
   data_points = dim(testing)[2]
+  sample_count = dim(sample_beta)[1]
   updated_labels = matrix(0, data_points, 1)
   probability_matrix = matrix(0, data_points, 1)
   
-  # loop through all the values and chose one label for each beta 
+  # loop through all the values and chose one label for each beta by prediction
   for (i in 1:sample_count) {
     beta = sample_beta[i,]
     temp_mat = t(testing) %*% beta
@@ -256,9 +264,10 @@ classifier = function(sample_beta, testing = X_Test){
 }
 
 average_classifier = function(sample_beta, testing = X_Test){
-  average_beta = colMeans(sample_beta)
-  sample_count = dim(sample_beta)[1]
+  
   data_points = dim(testing)[2]
+  sample_count = dim(sample_beta)[1]
+  average_beta = colMeans(sample_beta)
   updated_labels = matrix(0, data_points, 1)
   probability_matrix = matrix(0, data_points, 1)
   temp_mat = t(testing) %*% average_beta
@@ -266,6 +275,20 @@ average_classifier = function(sample_beta, testing = X_Test){
   probability_matrix = probability_matrix + (1/temp_prob)
   updated_labels[probability_matrix > 0.5] = 1
   return(updated_labels)
+}
+
+posterior_probability = function(sample_beta, testing = X_Test){
+  data_points = dim(testing)[2]
+  sample_count = dim(sample_beta)[1]
+  probability_matrix = matrix(0, data_points, 1)
+  
+  for(i in 1:sample_count){
+    beta = sample_beta[i,]
+    temp_mat = t(testing) %*% beta
+    probability_matrix = probability_matrix + (1/(1 + exp(-temp_mat)))
+  }
+  probability_matrix = probability_matrix/sample_count
+  return(probability_matrix)
 }
 
 testing_classification_accuracy = function(labels_predicted, labels_true = Y_Test){
@@ -276,43 +299,30 @@ testing_classification_accuracy = function(labels_predicted, labels_true = Y_Tes
   cat("The accuracy for classification is ", accuracy, "\n")
 }
 
-posterior_probability = function(sample_beta, testing = X_Test){
-  sample_count = dim(sample_beta)[1]
-  data_points = dim(testing)[2]
-  probability_matrix = matrix(0, data_points, 1)
-  
-  for(i in 1:sample_count){
-    beta = sample_beta[1,]
-    temp_mat = t(testing) %*% beta
-    probability_matrix = probability_matrix + (1/(1 + exp(-temp_mat)))
-  }
-  probability_matrix = probability_matrix/sample_count
-  return(probability_matrix)
-}
+## Driver for Question 2
+# 10000 samples of beta with epsilo = 0.2, L = 20, burn-in = 200
+sample_beta = HMC_util(0.5, 20, 10000, 100)
+#print(sample_beta)
 
-## Calling for Question 2
-# sample_beta = HMC_util(0.1, 20, 1000, 500)
-# print(sample_beta)
-# 
-# ## Draw Trace Plots
-# trace_beta(sample_beta, 1, "Sepal Length")
-# trace_beta(sample_beta, 2, "Sepal Width")
-# trace_beta(sample_beta, 3, "Petal Length")
-# trace_beta(sample_beta, 4, "Petal Width")
-# 
-# ## Get the prediction for y of the class labels for the testing data
-# prediction = classifier(sample_beta)
-# #print(prediction)
-# prediction = round(prediction)
-# #print(Y_Test)
-# testing_classification_accuracy(prediction)
-# posterior = posterior_probability(sample_beta)
-# print(posterior)
-# 
-# ## Do for the average classification
-# prediction_avg = average_classifier(sample_beta)
-# prediction_avg = round(prediction_avg)
-# testing_classification_accuracy(prediction_avg)
+## Draw Trace Plots
+trace_beta(sample_beta, 1, "Sepal Length")
+trace_beta(sample_beta, 2, "Sepal Width")
+trace_beta(sample_beta, 3, "Petal Length")
+trace_beta(sample_beta, 4, "Petal Width")
+
+## Get the prediction for y of the class labels for the testing data
+prediction = classifier(sample_beta, testing = X_Train)
+#print(prediction)
+prediction = round(prediction)
+#print(Y_Test)
+testing_classification_accuracy(prediction, labels_true = Y_Train)
+posterior = posterior_probability(sample_beta)
+#print(posterior)
+
+## Do for the average classification
+prediction_avg = average_classifier(sample_beta)
+prediction_avg = round(prediction_avg)
+testing_classification_accuracy(prediction_avg)
 
 ```
 
