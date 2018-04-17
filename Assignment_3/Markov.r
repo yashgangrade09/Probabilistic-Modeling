@@ -24,14 +24,70 @@ rand_generator = function()
   else 
     return (-1)
 }
+
+checkerboard = function(row, col){
+  check = matrix(0, row, col)
+  for(i in 1:row){
+    for(j in 1:col){
+      if(check[i,j] == ((i+j) %% 2)){
+        check[i,j] = 0
+      }
+      else{
+        check[i,j] = 1
+      }
+    }
+  }
+  return(check)
+}
+
+
+# gen_ising_prior_term = function(img, alpha, beta){
+#   num_col = dim(img)[2]
+#   num_row = dim(img)[1]
 # 
+#   #generating the new image, initializing it to 0 for all the values
+#   img2 = matrix(0, num_row, num_col)
+# 
+#   for(i in 1:num_row){
+#     for(j in 1:num_col){
+#       sum = 0
+#       if(i != num_row){
+#         sum = sum + img[i+1, j]
+#       }
+#       if(i != 1){
+#         sum = sum + img[i-1, j]
+#       }
+#       if(j != num_col){
+#         sum = sum + img[i, j+1]
+#       }
+#       if(j != 1){
+#         sum = sum + img[i, j-1]
+#       }
+#       u_positive = alpha + beta*sum
+#       u_negative = -alpha - beta*sum
+#       probability_negative = exp(u_negative)
+#       probability_positive = exp(u_positive)
+# 
+#       final_probability = probability_positive / (probability_negative + probability_positive)
+#       rand = runif(1)
+#       if(final_probability < rand){
+#         img2[i,j] = -1
+#       }
+#       else{
+#         img2[i,j] = 1
+#       }
+#     }
+#   }
+#   return(img2);
+# }
+
 gen_ising_prior_term = function(img, alpha, beta){
   num_col = dim(img)[2]
   num_row = dim(img)[1]
-
+  
   #generating the new image, initializing it to 0 for all the values
   img2 = matrix(0, num_row, num_col)
-
+  
   for(i in 1:num_row){
     for(j in 1:num_col){
       sum = 0
@@ -51,7 +107,7 @@ gen_ising_prior_term = function(img, alpha, beta){
       u_negative = -alpha - beta*sum
       probability_negative = exp(u_negative)
       probability_positive = exp(u_positive)
-
+      
       final_probability = probability_positive / (probability_negative + probability_positive)
       rand = runif(1)
       if(final_probability < rand){
@@ -62,7 +118,15 @@ gen_ising_prior_term = function(img, alpha, beta){
       }
     }
   }
-  return(img2);
+  checker = checkerboard(num_row, num_col)
+  
+  # for(i in 1:num_row){
+  #   for(j in 1:num_col){
+  #     img2[i,j] = (img2[i,j] * checker[i,j]) + (img[i,j] * (1 - checker[i,j]))
+  #   }
+  # }
+  img2 = img2 * checker + img * (1 - checker)
+  return(img2); 
 }
 
 
@@ -169,7 +233,7 @@ gibbs_sampling_prior_posterior = function(img, alpha, beta, sig, iterations, bur
     if(i > burn){
       num = num + 1
       img2 = (img2 * (num - 1) + img3)/num
-    } 
+    }
   }
   return(img2)
 }

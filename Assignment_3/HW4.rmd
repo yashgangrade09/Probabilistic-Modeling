@@ -10,7 +10,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Question 1
 
-### a
+### a) Running the code with just ising prior
+### Solution: 
+
+
+### b) Computing mean posterior images. 
+
+### c) Final estimate of variance.
+
+
+## CODE and RESULTS
 
 
 ```{r}
@@ -27,24 +36,26 @@ num_row = dim(img1)[1]
 
 binary_img = matrix(0, num_row, num_col)
 binary_img = apply(binary_img, 1:2, function(x) rand_generator());
+
+#checkerboard(num_row, num_col)
 #display_image(binary_img)
 
 ## Question 1.1
 cat("Trying to run for different alphas and betas \n")
 cat("Negative Alpha and Positive High Beta \n")
-resultant_img = gibbs_sampling_prior(binary_img, -0.1, 0.5, 2.5, 100, 5);
+resultant_img = gibbs_sampling_prior(binary_img, -0.5, 0.5, 2.5, 100, 5);
 display_image(resultant_img)
 #
 cat("Negative Alpha and Low Beta \n")
-resultant_img = gibbs_sampling_prior(binary_img, -0.1, 0.1, 2.5, 100, 5);
+resultant_img = gibbs_sampling_prior(binary_img, -0.5, 0.1, 2.5, 100, 5);
 display_image(resultant_img)
 #
 cat("Positive Alpha and Positive High Beta \n")
-resultant_img = gibbs_sampling_prior(binary_img, 0.1, 0.5, 2.5, 100, 5);
+resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.5, 2.5, 100, 5);
 display_image(resultant_img)
 #
 cat("Positive Alpha and Low Beta \n")
-resultant_img = gibbs_sampling_prior(binary_img, 0.1, 0.1, 2.5, 100, 5);
+resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.1, 2.5, 100, 5);
 display_image(resultant_img)
 #
 # ## Question 1.2
@@ -126,7 +137,7 @@ The code below contains the entire code for the parts aforementioned. I have add
 The implementation of Hamiltonian Monte Carlo can be found in the code below. This code is derived from Radford-Neal Paper. Also, to ease up the process, we are labelling virginica as 0 and versicolor as 1. 
 
 #### d) 
-Firstly, the dataset is divided into training and testing datasets. Then, we are generating 11000 samples of beta which contains 1000 for burn-in and 10000 for the testing stage. We are also seeing that we are getting acceptance rate of ~99\%. Now, for each sampled beta, we are computing a label for it. To compute a label, we are rounding up the probability to get the label. Following the aforementioned method, I got a classification accuracy of 96.67\% for predicting the $y$ labels.
+Firstly, the dataset is divided into training and testing datasets. Then, we are generating 11000 samples of beta which contains 1000 for burn-in and 10000 for the testing stage. We are also seeing that we are getting acceptance rate of ~98\%. Now, for each sampled beta, we are computing a label for it. To compute a label, we are rounding up the probability to get the label. Following the aforementioned method, I got a classification accuracy of 97.5\% for predicting the $y$ labels.
 
 #### e)
 The trace plots and histogram for the 4 features and one constant features can be found at the end of code. 
@@ -423,12 +434,12 @@ hist_plot(sample_beta, 5, "Constant")
 ## Question 1d. 
 
 ## Get the prediction for y of the class labels for the testing data
-prediction = classifier(sample_beta, testing = X_Train)
+prediction = classifier(sample_beta)
 prediction = round(prediction)
 #print(Y_Test)
 
-cat("For the predicted labels, the accuracy of classification is \n")
-testing_classification_accuracy(prediction, labels_true = Y_Train)
+cat("For the predicted labels, the accuracy of classification is calculated here\n")
+testing_classification_accuracy(prediction)
 
 cat("The posterior predictive probability for each testing data point \n")
 posterior = posterior_probability(sample_beta)
