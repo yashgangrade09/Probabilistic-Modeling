@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Question 1
 
 ```{r}
-source("Markov.r", echo = TRUE, keep.source = TRUE, max.deparse.length=10000)
+source("Markov.r", echo = FALSE, keep.source = TRUE, max.deparse.length=10000)
 
 img1 = read_image("noisy-message.png")
 img2 = read_image("noisy-yinyang.png")
@@ -27,37 +27,40 @@ binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 #display_image(binary_img)
 
 ## Question 1.1
-cat("Trying to run for different alphas and betas \n")
-cat("Negative Alpha and Positive High Beta \n")
-resultant_img = gibbs_sampling_prior(binary_img, -0.3, 0.8, 1.5, 100, 5);
-display_image(resultant_img)
-#
-cat("Negative Alpha and Low Beta \n")
-resultant_img = gibbs_sampling_prior(binary_img, -0.3, 0.1, 1.5, 100, 5);
-display_image(resultant_img)
-#
-cat("Positive Alpha and Positive High Beta \n")
-resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.8, 1.5, 100, 5);
-display_image(resultant_img)
-#
-cat("Positive Alpha and Low Beta \n")
-resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.1, 1.5, 100, 5);
-display_image(resultant_img)
-
-## Question 1.2
-cat("Running for the Markov Noisy Image \n")
-#
-cat("Here's the noisy image i.e. noisy-message.png \n")
-display_image(img1)
-#
-cat("We used alpha = 0, beta = 2.2, sigma = 1.4 with 100 iterations and 20 burn-in samples. The clean image is shown below \n")
-resultant_img = gibbs_sampling_prior_posterior(img1, 0, 2.2, 1.4, 100, 20);
-display_image(resultant_img)
+# cat("Trying to run for different alphas and betas \n")
+# cat("Negative Alpha and Positive High Beta \n")
+# resultant_img = gibbs_sampling_prior(binary_img, -0.3, 0.8, 1.5, 100, 5);
+# display_image(resultant_img)
+# #
+# cat("Negative Alpha and Low Beta \n")
+# resultant_img = gibbs_sampling_prior(binary_img, -0.3, 0.1, 1.5, 100, 5);
+# display_image(resultant_img)
+# #
+# cat("Positive Alpha and Positive High Beta \n")
+# resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.8, 1.5, 100, 5);
+# display_image(resultant_img)
+# #
+# cat("Positive Alpha and Low Beta \n")
+# resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.1, 1.5, 100, 5);
+# display_image(resultant_img)
+# 
+# ## Question 1.2
+# cat("Running for the Markov Noisy Image \n")
+# #
+# cat("Here's the noisy image i.e. noisy-message.png \n")
+# display_image(img1)
+# #
+# cat("We used alpha = 0, beta = 2.2, sigma = 1.4 with 100 iterations and 20 burn-in samples. The clean image is shown below \n")
+# resultant_img = gibbs_sampling_prior_posterior(img1, 0, 2.2, 1.4, 100, 20);
+# display_image(resultant_img)
 
 ## Question 1.3
-resultant_img = get_estimated_variance_prior_posterior(img1, 0.5, 1.5, 2.5, 100, 25) 
+resultant_img = gen_estimated_variance(img1, 0.2, 2, 1.5, 100, 20)
+display_image(resultant_img)
 
 ```
+
+
 
 ## Question 2 
 
@@ -242,6 +245,11 @@ trace_beta = function(beta, ftr_num, feature){
   plot(1:row, beta[,ftr_num], lwd = 1, type = 'l', col = 'blue', main="Trace Plot", xlab = "Samples", ylab = paste("Beta for ", feature, sep = ""))
 }
 
+hist_plot = function(beta, ftr_num, feature){
+  temp = beta[,ftr_num]
+  hist(temp, freq = FALSE, breaks = 75, col= "blue",main = "Histogram", xlab = "Samples", ylab = paste("Beta for ", feature, sep = ""))
+}
+
 ## Code for classification
 classifier = function(sample_beta, testing = X_Test){
   
@@ -300,8 +308,8 @@ testing_classification_accuracy = function(labels_predicted, labels_true = Y_Tes
 }
 
 ## Driver for Question 2
-# 10000 samples of beta with epsilo = 0.2, L = 20, burn-in = 200
-sample_beta = HMC_util(0.5, 20, 10000, 100)
+# 10000 samples of beta with epsilo = 0.2, L = 20, burn-in = 1000
+sample_beta = HMC_util(0.2, 20, 10000, 1000)
 #print(sample_beta)
 
 ## Draw Trace Plots
@@ -309,6 +317,16 @@ trace_beta(sample_beta, 1, "Sepal Length")
 trace_beta(sample_beta, 2, "Sepal Width")
 trace_beta(sample_beta, 3, "Petal Length")
 trace_beta(sample_beta, 4, "Petal Width")
+trace_beta(sample_beta, 5, "Constant")
+
+hist_plot(sample_beta, 1, "Sepal Length")
+hist_plot(sample_beta, 2, "Sepal Width")
+hist_plot(sample_beta, 3, "Petal Length")
+hist_plot(sample_beta, 4, "Petal Width")
+hist_plot(sample_beta, 5, "Constant")
+
+#print(sample_beta)
+#print(sample_beta[,1])
 
 ## Get the prediction for y of the class labels for the testing data
 prediction = classifier(sample_beta, testing = X_Train)

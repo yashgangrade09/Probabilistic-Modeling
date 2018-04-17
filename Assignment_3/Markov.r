@@ -96,13 +96,14 @@ gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
       probability_negative = exp(num_negative)
       probability_positive = exp(num_positive)
 
-      final_probability = probability_positive / (probability_negative + probability_positive)
-      rand = runif(1)
-      if(final_probability < rand){
-        img2[i,j] = -1
-      }
-      else{
+      final_probability = probability_positive / (probability_negative + probability_positive);
+      #print(final_probability)
+      rand = runif(1);
+      
+      if(final_probability > rand){
         img2[i,j] = 1
+      } else{
+        img2[i,j] = -1
       }
     }
   }
@@ -188,6 +189,34 @@ get_estimated_variance_prior = function(img, alpha, beta, sig, iterations, burn)
   return(img3)
 }
 
+gen_estimated_variance = function(img, alpha, beta, sig, iterations, burn){
+  num_col = dim(img)[2]
+  num_row = dim(img)[1]
+  num = 0
+  sample_sig = matrix(0, iterations, 1)
+  #img2 = matrix(0, num_row, num_col)
+  img2 = img
+  img_orig = img
+  it = iterations + burn
+  img3 = img
+  for(i in 1:it){
+    img3 = gen_ising_prior_posterior_term(img2, alpha, beta, sig)
+    if(i > burn){
+      num = num + 1
+      img2 = (img2 * (num - 1) + img3)/num
+      new_var = 0
+      for(j in 1:num_row){
+        for(k in 1:num_col){
+          new_var = new_var + (img2[j,k] - img_orig[j,k])^2;
+        }
+      }
+      sig = new_var/(num_col*num_row);
+    }
+  }
+  cat("The sigma is ", sig)
+  return(img2)
+}
+
 get_estimated_variance_prior_posterior = function(img, alpha, beta, sig, iterations, burn){
   num_col = dim(img)[2]
   num_row = dim(img)[1]
@@ -197,6 +226,7 @@ get_estimated_variance_prior_posterior = function(img, alpha, beta, sig, iterati
   img_orig = img
   sample_sig = matrix(0, iterations, 1)
   it = iterations + burn
+  img3 = img
   for(i in 1:it){
     img3 = gen_ising_prior_posterior_term(img, alpha, beta, sig)
     if(i > burn){
@@ -206,7 +236,7 @@ get_estimated_variance_prior_posterior = function(img, alpha, beta, sig, iterati
       new_var = 0
       for(j in 1:num_row){
         for(k in 1:num_col){
-          new_var = new_var + (img3[j,k] - img_orig[j,k])^2
+          new_var = (img2[j,k] - img_orig[j,k])^2
         }
       }
       sample_sig[num,] = sig
