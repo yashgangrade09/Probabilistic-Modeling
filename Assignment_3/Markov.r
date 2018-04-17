@@ -24,14 +24,14 @@ rand_generator = function()
   else 
     return (-1)
 }
-
+# 
 gen_ising_prior_term = function(img, alpha, beta){
   num_col = dim(img)[2]
   num_row = dim(img)[1]
-  
+
   #generating the new image, initializing it to 0 for all the values
   img2 = matrix(0, num_row, num_col)
-  
+
   for(i in 1:num_row){
     for(j in 1:num_col){
       sum = 0
@@ -51,7 +51,7 @@ gen_ising_prior_term = function(img, alpha, beta){
       u_negative = -alpha - beta*sum
       probability_negative = exp(u_negative)
       probability_positive = exp(u_positive)
-      
+
       final_probability = probability_positive / (probability_negative + probability_positive)
       rand = runif(1)
       if(final_probability < rand){
@@ -64,6 +64,7 @@ gen_ising_prior_term = function(img, alpha, beta){
   }
   return(img2);
 }
+
 
 gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
   num_col = dim(img)[2]
@@ -213,7 +214,7 @@ gen_estimated_variance = function(img, alpha, beta, sig, iterations, burn){
       sig = new_var/(num_col*num_row);
     }
   }
-  cat("The sigma is ", sig)
+  cat("The sigma is ", sig, "\n")
   return(img2)
 }
 

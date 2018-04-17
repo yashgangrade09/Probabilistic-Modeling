@@ -10,6 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Question 1
 
+### a
+
+
 ```{r}
 source("Markov.r", echo = FALSE, keep.source = TRUE, max.deparse.length=10000)
 
@@ -27,23 +30,23 @@ binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 #display_image(binary_img)
 
 ## Question 1.1
-# cat("Trying to run for different alphas and betas \n")
-# cat("Negative Alpha and Positive High Beta \n")
-# resultant_img = gibbs_sampling_prior(binary_img, -0.3, 0.8, 1.5, 100, 5);
-# display_image(resultant_img)
-# #
-# cat("Negative Alpha and Low Beta \n")
-# resultant_img = gibbs_sampling_prior(binary_img, -0.3, 0.1, 1.5, 100, 5);
-# display_image(resultant_img)
-# #
-# cat("Positive Alpha and Positive High Beta \n")
-# resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.8, 1.5, 100, 5);
-# display_image(resultant_img)
-# #
-# cat("Positive Alpha and Low Beta \n")
-# resultant_img = gibbs_sampling_prior(binary_img, 0.3, 0.1, 1.5, 100, 5);
-# display_image(resultant_img)
-# 
+cat("Trying to run for different alphas and betas \n")
+cat("Negative Alpha and Positive High Beta \n")
+resultant_img = gibbs_sampling_prior(binary_img, -0.1, 0.5, 2.5, 100, 5);
+display_image(resultant_img)
+#
+cat("Negative Alpha and Low Beta \n")
+resultant_img = gibbs_sampling_prior(binary_img, -0.1, 0.1, 2.5, 100, 5);
+display_image(resultant_img)
+#
+cat("Positive Alpha and Positive High Beta \n")
+resultant_img = gibbs_sampling_prior(binary_img, 0.1, 0.5, 2.5, 100, 5);
+display_image(resultant_img)
+#
+cat("Positive Alpha and Low Beta \n")
+resultant_img = gibbs_sampling_prior(binary_img, 0.1, 0.1, 2.5, 100, 5);
+display_image(resultant_img)
+#
 # ## Question 1.2
 # cat("Running for the Markov Noisy Image \n")
 # #
@@ -53,10 +56,22 @@ binary_img = apply(binary_img, 1:2, function(x) rand_generator());
 # cat("We used alpha = 0, beta = 2.2, sigma = 1.4 with 100 iterations and 20 burn-in samples. The clean image is shown below \n")
 # resultant_img = gibbs_sampling_prior_posterior(img1, 0, 2.2, 1.4, 100, 20);
 # display_image(resultant_img)
-
-## Question 1.3
-resultant_img = gen_estimated_variance(img1, 0.2, 2, 1.5, 100, 20)
-display_image(resultant_img)
+# 
+# cat("Running for the Noisy Yinyang Image \n")
+# #
+# cat("Here's the noisy image i.e. noisy-yinyang.png \n")
+# display_image(img2)
+# #
+# cat("We used alpha = 0, beta = 2.2, sigma = 1.4 with 100 iterations and 20 burn-in samples. The clean image is shown below \n")
+# resultant_img = gibbs_sampling_prior_posterior(img2, 0, 5, 2.5, 100, 20);
+# display_image(resultant_img)
+# 
+# ## Question 1.3
+# resultant_img = gen_estimated_variance(img1, 0.2, 2, 1.5, 100, 20)
+# display_image(resultant_img)
+# 
+# resultant_img = gen_estimated_variance(img2, 0.2, 5, 2.5, 100, 20)
+# display_image(resultant_img)
 
 ```
 
@@ -64,10 +79,68 @@ display_image(resultant_img)
 
 ## Question 2 
 
+### (a) Write down the formula for the unnormalized posterior of $\beta | Y$
+### Solution:
+We are given the data $(X,Y)$, with $X \in R^d$ and $Y \in \{0,1\}$. To train the classifier, we have the following model
+$$Y \sim Ber\left(\frac{1}{1 + e^{-X^T \beta}}\right)$$
+$$X \sim N(0, \sigma^2 I)$$
+
+Now, we need to write the formula of unnormalized posterior of $\beta | Y$ i.e. $$p(\beta | y; x, \sigma) \propto \prod_{i=1}^{n} p(y_i | \beta; x_i) p(\beta; \sigma)$$ 
+
+Now, to find this, we will first write the two terms in the product individually. So for $p(y_i | \beta; x_i)$ we can compute it using the properties of a bernoulli random variable. So we have, 
+
+$$p(y_i | \beta; x_i) = \left(\frac{1}{1 + e^{-x_i^T \beta}}\right)^{y_i} \left(1 - \frac{1}{1 + e^{-x_i^T \beta}}\right)^{1- y_i}$$
+
+Similarly, we have, 
+$$p(\beta, \sigma) \propto e^{\frac{-||\beta||^2}{2 \sigma^2}}$$
+
+Now, putting these two values together in the original unnormalized posterior formula, we have, 
+
+$$p(\beta | y; x, \sigma) \propto e^{\frac{-||\beta||^2}{2 \sigma^2}} \cdot \left[\prod_{i=1}^{n}\left(\frac{1}{1 + e^{-x_i^T \beta}}\right)^{y_i} \left(1 - \frac{1}{1 + e^{-x_i^T \beta}}\right)^{1- y_i} \right]$$ 
+
+### (b) Show that this posterior is proportional to exp(-U(beta)).
+### Solution:
+
+Here, we have to show that the posterior computed in the previous question is proportional to $exp(-U(\beta))$ where $U(\beta)$ is defined as:
+$$U(\beta) = \sum_{i=1}^{n} (1 - y_i)x_i^T\beta +  \log (1 + e^{-x_i^T \beta}) + \frac{1}{2\sigma ^2} ||\beta||^2$$
+
+So, in order to prove this statement we will assume that $e^{-U(\beta)}$ is indeed equivalent to the posterior. We are gonna skip the proportionality constant in this case because it doesn't affect the proof. Then we will show that the $U(\beta)$ that we get now satisfies the aforementioned equation. Therefore, let us assume, 
+
+\begin{align*}
+    e^{-U(\beta)} &= e^{\frac{-||\beta||^2}{2 \sigma^2}} \cdot \left[\prod_{i=1}^{n}\left(\frac{1}{1 + e^{-x_i^T \beta}}\right)^{y_i} \left(1 - \frac{1}{1 + e^{-x_i^T \beta}}\right)^{1- y_i} \right] \\
+    &\text{Taking natural log of this equation} \\
+    -U(\beta) &= \frac{-||\beta||^2}{2 \sigma^2} + \left[\sum_{i=1}^{n}y_i \log \left(\frac{1}{1 + e^{-x_i^T \beta}}\right) + (1 - y_i) \log \left(1 - \frac{1}{1 + e^{-x_i^T \beta}}\right)\right] \\
+    -U(\beta) &= \frac{-||\beta||^2}{2 \sigma^2} + \left[\sum_{i=1}^{n} -y_i \log \left(1 + e^{-x_i^T \beta}\right) + (1 - y_i) \log \left(\frac{e^{-x_i^T \beta}}{1 + e^{-x_i^T \beta}}\right)\right] \\
+    -U(\beta) &= \frac{-||\beta||^2}{2 \sigma^2} + \left[\sum_{i=1}^{n} -y_i \log \left(1 + e^{-x_i^T \beta}\right) + (1 - y_i) \left( \log \left(e^{-x_i^T \beta} \right) - \log \left(1 + e^{-x_i^T \beta}\right)\right)\right] \\
+    U(\beta) &= \frac{||\beta||^2}{2 \sigma^2} + \left[\sum_{i=1}^{n} y_i \log \left(1 + e^{-x_i^T \beta}\right) - (1 - y_i) \log \left(e^{-x_i^T \beta} \right) + (1 - y_i) \log \left(1 + e^{-x_i^T \beta}\right)\right] \\
+    U(\beta) &= \frac{||\beta||^2}{2 \sigma^2} + \left[\sum_{i=1}^{n} \log \left(1 + e^{-x_i^T \beta}\right) + (1 - y_i) x_i^T \beta\right] \\
+\end{align*}
+
+So we can see that it matches the original equation of $U(\beta)$, hence our assumption was right.  
+
+### (c), (d), (e), and (f)
+
+The code below contains the entire code for the parts aforementioned. I have added comments in between to demonstrate what a particular piece of code is doing. Please refer to the cat statements and comments in between. The results are summarized below before the code.
+
+#### c) 
+The implementation of Hamiltonian Monte Carlo can be found in the code below. This code is derived from Radford-Neal Paper. Also, to ease up the process, we are labelling virginica as 0 and versicolor as 1. 
+
+#### d) 
+Firstly, the dataset is divided into training and testing datasets. Then, we are generating 11000 samples of beta which contains 1000 for burn-in and 10000 for the testing stage. We are also seeing that we are getting acceptance rate of ~99\%. Now, for each sampled beta, we are computing a label for it. To compute a label, we are rounding up the probability to get the label. Following the aforementioned method, I got a classification accuracy of 96.67\% for predicting the $y$ labels.
+
+#### e)
+The trace plots and histogram for the 4 features and one constant features can be found at the end of code. 
+
+#### f)
+For this part, we used sigma = 2, epsilon = 0.2, and leapfrog steps, L = 20. Here, we are doing the average classification and then computing the accuracy of classification. We got average classification as 97.5\%.
+
+## CODE ##
+
 ```{r}
 #source("HamiltonianMonteCarlo.r", echo = FALSE, keep.source = FALSE, max.deparse.length=10000)
 require(animation)
-## Load and Store the data so as to use for the given question
+
+## Load and Store the data to use for the given question
 dataset = iris
 dataset = subset(dataset, Species != "setosa")
 
@@ -78,13 +151,15 @@ dataset = subset(dataset, Species != "setosa")
 # }
 
 #the upper solution was not working so found one alternative to that on StackOverflow
+# Mapping the versicolor to 1 and virginica to 0
 dataset$Species = ifelse(dataset$Species == "versicolor", 1, 0)
 
+## Debugging Statements
 #print(dataset)
 #dataset = as.matrix(dataset)
 #print(dataset[,1])
-# Seperate the dataset into features and labels
 
+# Seperate the dataset into features and labels
 X = t(as.matrix(cbind(dataset[1:4], 1)))
 Y = as.matrix(dataset[5])
 
@@ -93,7 +168,7 @@ Y = as.matrix(dataset[5])
 #print(t(rowMeans(X)))
 #print(Y)
 
-# Seperate the training and training datasets 
+# Seperate the training and testing datasets 
 X_Train = matrix(0.0, 5, 60)
 X_Test = matrix(0.0, 5, 40)
 #print(dim(X_Train))
@@ -118,17 +193,22 @@ X_Test = X_Test - rowMeans(X_Test)
 # print(X_Train)
 # print(X_Test)
 
+# initializing the beta, sigma and reject counter
 beta_i = matrix(0.0,5,1)
 sigma_i = 1
+reject_counter = 0
 
 #### Main methods start from here ####
 
+
+# Method to calculate the norm of the beta vector
 beta_norm = function(beta){
   temp = as.vector(beta)
   temp = sqrt(sum(temp * temp))
   return(temp)
 }
 
+# The energy function
 U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Train){
   temp_beta = beta_norm(beta)
   temp_mul = t(data) %*% beta
@@ -136,14 +216,17 @@ U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Train){
   return (temp_U)
 }
 
+# Gradient of the energy function
 grad_U = function(beta = beta_i, sigma = sigma_i, data = X_Train, labels = Y_Train){
   temp_mul = t(data) %*% beta
   temp_mat = 1 - (exp(-temp_mul)/(1 + exp(-temp_mul))) - labels
   temp_gradient = data %*% temp_mat + ((1/sigma^2)*beta)
   return(temp_gradient)
 }
-reject_counter = 0
-## Code from Radford Neal's paper (slightly modified, adds animation)
+
+## Code for Q.2c i.e. implementation of Hamiltonian Monte Carlo routine for sampling from the posterior of Beta 
+## Code from Radford Neal's paper (slightly modified)
+
 HMC = function (U, grad_U, epsilon, L, current_q, anim = FALSE)
 {
   q = current_q
@@ -206,7 +289,7 @@ HMC = function (U, grad_U, epsilon, L, current_q, anim = FALSE)
   }
 }
 
-#driver function to run Hamiltonian Monte Carlo
+# Driver function to run Hamiltonian Monte Carlo
 HMC_util = function(epsilon, L, samples, burn){
   reject = 0
   beta = beta_i
@@ -238,7 +321,7 @@ HMC_util = function(epsilon, L, samples, burn){
   return(beta_l)
 }
 
-## Generating Plots
+## Generating Plots - Trace Plots and Histogram
 
 trace_beta = function(beta, ftr_num, feature){
   row = dim(beta)[1]
@@ -250,7 +333,8 @@ hist_plot = function(beta, ftr_num, feature){
   hist(temp, freq = FALSE, breaks = 75, col= "blue",main = "Histogram", xlab = "Samples", ylab = paste("Beta for ", feature, sep = ""))
 }
 
-## Code for classification
+## Classification process 
+
 classifier = function(sample_beta, testing = X_Test){
   
   data_points = dim(testing)[2]
@@ -271,6 +355,7 @@ classifier = function(sample_beta, testing = X_Test){
   return(probability_matrix)
 }
 
+# To get the average prediction
 average_classifier = function(sample_beta, testing = X_Test){
   
   data_points = dim(testing)[2]
@@ -285,6 +370,7 @@ average_classifier = function(sample_beta, testing = X_Test){
   return(updated_labels)
 }
 
+# To get the Monte Carlo estimate of the Posterior Predictive probability
 posterior_probability = function(sample_beta, testing = X_Test){
   data_points = dim(testing)[2]
   sample_count = dim(sample_beta)[1]
@@ -299,6 +385,7 @@ posterior_probability = function(sample_beta, testing = X_Test){
   return(probability_matrix)
 }
 
+# Code to get the accuracy of classification
 testing_classification_accuracy = function(labels_predicted, labels_true = Y_Test){
   data_count = dim(labels_predicted)[1]
   temp = matrix(0, data_count, 1)
@@ -308,11 +395,16 @@ testing_classification_accuracy = function(labels_predicted, labels_true = Y_Tes
 }
 
 ## Driver for Question 2
-# 10000 samples of beta with epsilo = 0.2, L = 20, burn-in = 1000
+
+# Question 1c.
+
+# Sample the 10000 samples of beta with epsilon = 0.2, L = 20, burn-in = 1000
 sample_beta = HMC_util(0.2, 20, 10000, 1000)
 #print(sample_beta)
 
-## Draw Trace Plots
+## Question 1e
+
+## Draw Trace Plots and Histograms of all the 5 variables (i.e. 1D constants)
 trace_beta(sample_beta, 1, "Sepal Length")
 trace_beta(sample_beta, 2, "Sepal Width")
 trace_beta(sample_beta, 3, "Petal Length")
@@ -328,21 +420,30 @@ hist_plot(sample_beta, 5, "Constant")
 #print(sample_beta)
 #print(sample_beta[,1])
 
+## Question 1d. 
+
 ## Get the prediction for y of the class labels for the testing data
 prediction = classifier(sample_beta, testing = X_Train)
-#print(prediction)
 prediction = round(prediction)
 #print(Y_Test)
+
+cat("For the predicted labels, the accuracy of classification is \n")
 testing_classification_accuracy(prediction, labels_true = Y_Train)
+
+cat("The posterior predictive probability for each testing data point \n")
 posterior = posterior_probability(sample_beta)
-#print(posterior)
+print(posterior)
+
+## Question 1f.
 
 ## Do for the average classification
+cat("For the average classification, the accuracy of classification is \n")
 prediction_avg = average_classifier(sample_beta)
 prediction_avg = round(prediction_avg)
 testing_classification_accuracy(prediction_avg)
 
 ```
+
 
 
 
