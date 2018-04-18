@@ -17,11 +17,12 @@ opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
 ### a) Running the code with just ising prior
 Here, we just use the ising prior to get the images. We are also generating binary random images using the indigenous rand_generator function written. We are testing with different values of alpha, beta, and sigma. Different category of images are shown in the results. We are using 50 iterations to generate random binary images.
 
+Through this experiment, we can observe the effects of alpha and beta over the image. We know that negative values of alpha favors more -1 (Black) pixels and similarly positive values of alpha favors more +1 (White) pixels. And, high beta favours bigger blobs of white or black pixels. This phenomenon can be observed in the test images of ques1 a. 
+
 ### b) Computing mean posterior images. 
 The clean images are shown in the results below. We used the following values.
 
 Noisy Message -> alpha = 0, beta = 2.2, sigma^2 = 1.4, iterations = 100, burn-in = 20
-
 Noisy Yinyang -> alpha = 0, beta = 5.5, sigma^2 = 2.5, iterations = 100, burn-in = 20
 
 
@@ -55,15 +56,15 @@ cat("Negative Alpha and Positive High Beta \n")
 resultant_img = gibbs_sampling_prior(binary_img, -0.1, 3, 1.5, 50, 5);
 display_image(resultant_img)
 # #
-# cat("Negative Alpha and Low Beta \n")
+cat("Negative Alpha and Low Beta \n")
 resultant_img = gibbs_sampling_prior(binary_img, -0.1, 1, 1.5, 50, 5);
 display_image(resultant_img)
 # #
-# cat("Positive Alpha and Positive High Beta \n")
+cat("Positive Alpha and Positive High Beta \n")
 resultant_img = gibbs_sampling_prior(binary_img, 0.1, 3, 1.5, 50, 5);
 display_image(resultant_img)
 # #
-# cat("Positive Alpha and Low Beta \n")
+cat("Positive Alpha and Low Beta \n")
 resultant_img = gibbs_sampling_prior(binary_img, 0.1, 1, 1.5, 50, 5);
 display_image(resultant_img)
 #
@@ -450,17 +451,17 @@ prediction = classifier(sample_beta)
 prediction = round(prediction)
 #print(Y_Test)
 
-cat("For the predicted labels, the accuracy of classification is calculated below. \n")
+cat("For the predicted labels, the accuracy of classification is calculated here\n")
 testing_classification_accuracy(prediction)
 
-cat("The posterior predictive probability for each testing data point is shown in form of array below. \n")
+cat("The posterior predictive probability for each testing data point \n")
 posterior = posterior_probability(sample_beta)
 print(posterior)
 
 ## Question 1f.
 
 ## Do for the average classification
-cat("For the average classification, the accuracy of classification is calculated below. \n")
+cat("For the average classification, the accuracy of classification is \n")
 prediction_avg = average_classifier(sample_beta)
 prediction_avg = round(prediction_avg)
 testing_classification_accuracy(prediction_avg)

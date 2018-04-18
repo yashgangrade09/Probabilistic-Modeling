@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ### a) Running the code with just ising prior
 Here, we just use the ising prior to get the images. We are also generating binary random images using the indigenous rand_generator function written. We are testing with different values of alpha, beta, and sigma. Different category of images are shown in the results. We are using 50 iterations to generate random binary images.
 
+Through this experiment, we can observe the effects of alpha and beta over the image. We know that negative values of alpha favors more -1 (Black) pixels and similarly positive values of alpha favors more +1 (White) pixels. And, high beta favours bigger blobs of white or black pixels. This phenomenon can be observed in the test images of ques1 a. 
+
 ### b) Computing mean posterior images. 
 The clean images are shown in the results below. We used the following values.
 
@@ -50,15 +52,15 @@ cat("Negative Alpha and Positive High Beta \n")
 resultant_img = gibbs_sampling_prior(binary_img, -0.1, 3, 1.5, 50, 5);
 display_image(resultant_img)
 # #
-# cat("Negative Alpha and Low Beta \n")
+cat("Negative Alpha and Low Beta \n")
 resultant_img = gibbs_sampling_prior(binary_img, -0.1, 1, 1.5, 50, 5);
 display_image(resultant_img)
 # #
-# cat("Positive Alpha and Positive High Beta \n")
+cat("Positive Alpha and Positive High Beta \n")
 resultant_img = gibbs_sampling_prior(binary_img, 0.1, 3, 1.5, 50, 5);
 display_image(resultant_img)
 # #
-# cat("Positive Alpha and Low Beta \n")
+cat("Positive Alpha and Low Beta \n")
 resultant_img = gibbs_sampling_prior(binary_img, 0.1, 1, 1.5, 50, 5);
 display_image(resultant_img)
 #

@@ -171,39 +171,7 @@ gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
       }
     }
   }
-  
-  # for(iter in 1:(num_row*num_col)){
-  #     i = sample.int(num_row, 1)
-  #     j = sample.int(num_col, 1)
-  #     
-  #     sum = 0
-  #     if(i != num_row){
-  #       sum = sum + img[i+1, j]
-  #     }
-  #     if(i != 1){
-  #       sum = sum + img[i-1, j]
-  #     }
-  #     if(j != num_col){
-  #       sum = sum + img[i, j+1] 
-  #     }
-  #     if(j != 1){
-  #       sum = sum + img[i, j-1] 
-  #     }
-  #     t1 = 1/(2*sig^2)
-  #     num_positive = alpha + beta*sum - (t1*((1 - (1 - img[i,j])^2)))
-  #     num_negative = -alpha - beta*sum - (t1*((-1 - (1 - img[i,j])^2)))
-  #     probability_negative = exp(-num_negative)
-  #     probability_positive = exp(num_positive)
-  #     
-  #     final_probability = probability_positive / (probability_negative + probability_positive)
-  #     rand = runif(1)
-  #     if(final_probability < rand){
-  #       img2[i,j] = -1
-  #     }
-  #     else{
-  #       img2[i,j] = 1
-  #     }
-  # }
+
   return(img2);
 }
 
@@ -255,22 +223,6 @@ gibbs_sampling_prior_posterior = function(img, alpha, beta, sig, iterations, bur
   return(img2)
 }
 
-get_estimated_variance_prior = function(img, alpha, beta, sig, iterations, burn){
-  num_col = dim(img)[2]
-  num_row = dim(img)[1]
-  num = 0
-  #generating the new image, initializing it to 0 for all the values
-  img2 = matrix(0, num_row, num_col)  
-  img_orig = img
-  sample_sig = matrix(0, iterations, 1)
-  it = iterations + burn
-  for(i in 1:it){
-    img3 = gen_ising_prior_term(img_orig, alpha, beta)
-    img = img3
-  }
-  return(img3)
-}
-
 gen_estimated_variance = function(img, alpha, beta, sig, iterations, burn){
   num_col = dim(img)[2]
   num_row = dim(img)[1]
@@ -293,43 +245,45 @@ gen_estimated_variance = function(img, alpha, beta, sig, iterations, burn){
         }
       }
       sig = new_var/(num_col*num_row);
+      #can be used for plotting
+      sample_sig[num,] = sig
     }
   }
   cat("The sigma is ", sig, "\n")
   return(img2)
 }
-
-get_estimated_variance_prior_posterior = function(img, alpha, beta, sig, iterations, burn){
-  num_col = dim(img)[2]
-  num_row = dim(img)[1]
-  num = 0
-  #generating the new image, initializing it to 0 for all the values
-  img2 = matrix(0, num_row, num_col)  
-  img_orig = img
-  sample_sig = matrix(0, iterations, 1)
-  it = iterations + burn
-  img3 = img
-  for(i in 1:it){
-    img3 = gen_ising_prior_posterior_term(img, alpha, beta, sig)
-    if(i > burn){
-      num = num + 1
-      img2 = (img2 * (num - 1) + img3)/num
-      #display_image(img2)
-      new_var = 0
-        for(j in 1:num_row){
-          for(k in 1:num_col){
-            new_var = new_var + (img2[j,k] - img_orig[j,k])^2
-          }
-        }
-      #sample_sig[num,] = sig
-      sig = new_var/(num_row * num_col)
-    }
-    img = img3
-  }
-  #print(sum(sample_sig)/iterations)
-  cat("The sigma is ", sig)
-  return(img2)
-}
+# 
+# get_estimated_variance_prior_posterior = function(img, alpha, beta, sig, iterations, burn){
+#   num_col = dim(img)[2]
+#   num_row = dim(img)[1]
+#   num = 0
+#   #generating the new image, initializing it to 0 for all the values
+#   img2 = matrix(0, num_row, num_col)  
+#   img_orig = img
+#   sample_sig = matrix(0, iterations, 1)
+#   it = iterations + burn
+#   img3 = img
+#   for(i in 1:it){
+#     img3 = gen_ising_prior_posterior_term(img, alpha, beta, sig)
+#     if(i > burn){
+#       num = num + 1
+#       img2 = (img2 * (num - 1) + img3)/num
+#       #display_image(img2)
+#       new_var = 0
+#         for(j in 1:num_row){
+#           for(k in 1:num_col){
+#             new_var = new_var + (img2[j,k] - img_orig[j,k])^2
+#           }
+#         }
+#       #sample_sig[num,] = sig
+#       sig = new_var/(num_row * num_col)
+#     }
+#     img = img3
+#   }
+#   #print(sum(sample_sig)/iterations)
+#   cat("The sigma is ", sig)
+#   return(img2)
+# }
 
 
 
