@@ -87,7 +87,7 @@ gen_ising_prior_term = function(img, alpha, beta){
   
   #generating the new image, initializing it to 0 for all the values
   img2 = matrix(0, num_row, num_col)
-  
+  checker = checkerboard(num_row, num_col)
   for(i in 1:num_row){
     for(j in 1:num_col){
       sum = 0
@@ -118,14 +118,13 @@ gen_ising_prior_term = function(img, alpha, beta){
       }
     }
   }
-  checker = checkerboard(num_row, num_col)
+  
   
   # for(i in 1:num_row){
   #   for(j in 1:num_col){
   #     img2[i,j] = (img2[i,j] * checker[i,j]) + (img[i,j] * (1 - checker[i,j]))
   #   }
   # }
-  img2 = img2 * checker + img * (1 - checker)
   return(img2); 
 }
 
@@ -208,15 +207,33 @@ gen_ising_prior_posterior_term = function(img, alpha, beta, sig){
   return(img2);
 }
 
+# gibbs_sampling_prior = function(img, alpha, beta, sig, iterations, burn){
+#   num_col = dim(img)[2]
+#   num_row = dim(img)[1]
+#   num = 0
+#   #generating the new image, initializing it to 0 for all the values
+#   img2 = img
+#   it = iterations + burn
+#   for(i in 1:it){
+#     img2 = gen_ising_prior_term(img2, alpha, beta)
+#   }
+#   return(img2)
+# }
+
 gibbs_sampling_prior = function(img, alpha, beta, sig, iterations, burn){
   num_col = dim(img)[2]
   num_row = dim(img)[1]
   num = 0
   #generating the new image, initializing it to 0 for all the values
   img2 = img
+  img_orig = img
+  checker = checkerboard(num_row, num_col)
   it = iterations + burn
   for(i in 1:it){
     img2 = gen_ising_prior_term(img2, alpha, beta)
+    img2 = img2*checker + (1 - checker)*img
+    img = img2
+    checker = 1 - checker
   }
   return(img2)
 }
@@ -299,12 +316,12 @@ get_estimated_variance_prior_posterior = function(img, alpha, beta, sig, iterati
       img2 = (img2 * (num - 1) + img3)/num
       #display_image(img2)
       new_var = 0
-      for(j in 1:num_row){
-        for(k in 1:num_col){
-          new_var = (img2[j,k] - img_orig[j,k])^2
+        for(j in 1:num_row){
+          for(k in 1:num_col){
+            new_var = new_var + (img2[j,k] - img_orig[j,k])^2
+          }
         }
-      }
-      sample_sig[num,] = sig
+      #sample_sig[num,] = sig
       sig = new_var/(num_row * num_col)
     }
     img = img3
