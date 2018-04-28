@@ -63,13 +63,3 @@ HMC = function (U, grad_U, epsilon, L, current_q, anim = FALSE)
     return (current_q) # reject
 }
 
-#pdf from the Metropolis Hasting Algorithm. It is derived from the MetropolisHastings.r code on the class website
-f = function(x)
-{
-  exp(-x^8 + 4 * x^4 - 3 * x^2)
-}
-
-clamp = function(x, a, b) { (x<a)*a + (x>b)*b + (x>=a)*(x<=b)*x }
-
-
-

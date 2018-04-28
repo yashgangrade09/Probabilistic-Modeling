@@ -1,0 +1,1 @@
+The main code files are Markov.r and HW4.rmd. If you want to knit a pdf, run HW4_PDF.rmd. 
